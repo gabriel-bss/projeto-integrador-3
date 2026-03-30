@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Dados - Sistema de Atestados Médicos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2c7da0;
+            --secondary-color: #468faf;
+            --background-color: #f8f9fa;
+            --text-color: #2b2d42;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.25rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 1; color: white; }
+
+        .kpi-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+        }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+        .kpi-value {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.1;
+        }
+        .kpi-label {
+            font-size: 0.78rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.4rem;
+        }
+        .kpi-sub { font-size: 0.8rem; color: #888; margin-top: 0.25rem; }
+
+        .chart-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+            height: 100%;
+        }
+        .chart-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .chart-container { position: relative; height: 280px; }
+        .chart-container-sm { position: relative; height: 240px; }
+
+        .filter-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+            margin-bottom: 1.5rem;
+        }
+
+        .export-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+            margin-bottom: 1.5rem;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, rgba(44,125,160,0.08), rgba(70,143,175,0.04));
+            border-left: 3px solid var(--primary-color);
+            border-radius: 0 6px 6px 0;
+            padding: 0.6rem 0.9rem;
+            margin-top: 0.75rem;
+            font-size: 0.82rem;
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
+        .btn-primary:hover { background-color: var(--secondary-color); border-color: var(--secondary-color); }
+
+        .footer {
+            margin-top: auto;
+            padding: 1rem 0;
+            background-color: #f1f1f1;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 9998;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-spinner {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem 2.5rem;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Alto Contraste button */
+        .btn-contraste {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-contraste:hover { background-color: var(--secondary-color); transform: translateY(-3px); }
+        @media (max-width: 575.98px) {
+            .btn-contraste { padding: 6px 12px; font-size: 0.8rem; right: 10px; top: 50px; }
+        }
+
+        /* ===== DARK MODE ===== */
+        body.alto-contraste { background-color: #000 !important; color: #fff !important; }
+        body.alto-contraste .header { background: #1b1b1b !important; border-bottom: 2px solid var(--primary-color); }
+        body.alto-contraste .footer { background-color: #1b1b1b !important; color: #aaa; }
+
+        body.alto-contraste .kpi-card,
+        body.alto-contraste .chart-card,
+        body.alto-contraste .filter-section,
+        body.alto-contraste .export-section,
+        body.alto-contraste .loading-spinner {
+            background-color: #1b1b1b !important;
+            border-color: #333;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.04) !important;
+        }
+
+        body.alto-contraste .kpi-label { color: #aaa !important; }
+        body.alto-contraste .kpi-sub { color: #888 !important; }
+        body.alto-contraste .chart-title { color: #fff !important; }
+        body.alto-contraste .insight-box {
+            background: #222 !important;
+            border-color: var(--primary-color);
+            color: #ddd;
+        }
+
+        body.alto-contraste .form-select,
+        body.alto-contraste .form-control {
+            background-color: #222 !important;
+            color: #fff !important;
+            border-color: #444 !important;
+        }
+        body.alto-contraste .form-label { color: #ddd !important; }
+
+        body.alto-contraste .btn-primary {
+            background-color: #fff !important;
+            color: #000 !important;
+            border-color: #fff !important;
+        }
+        body.alto-contraste .btn-outline-secondary {
+            color: #fff !important;
+            border-color: #555 !important;
+        }
+        body.alto-contraste .btn-outline-secondary:hover { background-color: #333 !important; }
+
+        body.alto-contraste .btn-danger {
+            background-color: #c0392b !important;
+            border-color: #c0392b !important;
+            color: #fff !important;
+        }
+        body.alto-contraste .btn-success {
+            background-color: #1e8449 !important;
+            border-color: #1e8449 !important;
+            color: #fff !important;
+        }
+
+        body.alto-contraste .text-muted { color: #888 !important; }
+        body.alto-contraste .breadcrumb-item a { color: var(--primary-color) !important; }
+        body.alto-contraste .breadcrumb-item.active { color: #fff !important; }
+        body.alto-contraste .breadcrumb-item + .breadcrumb-item::before { color: #666; }
+
+        body.alto-contraste .dropdown-menu { background-color: #222 !important; border-color: #444; }
+        body.alto-contraste .dropdown-item { color: #fff !important; }
+        body.alto-contraste .dropdown-item:hover { background-color: var(--primary-color) !important; }
+        body.alto-contraste .dropdown-divider { border-color: #444; }
+
+        body.alto-contraste .empty-state { color: #888 !important; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
+
+        @media (max-width: 767.98px) {
+            .kpi-value { font-size: 1.5rem; }
+            .chart-container, .chart-container-sm { height: 220px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner-border text-primary mb-3" role="status" aria-hidden="true"></div>
+            <p class="mb-0 fw-500" id="loadingText">Carregando dados...</p>
+        </div>
+    </div>
+
+    <!-- Accessibility Button -->
+    <button id="contraste-toggle" class="btn-contraste" aria-label="Alternar alto contraste">
+        <i class="fas fa-adjust"></i> Acessibilidade
+    </button>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col d-flex align-items-center gap-3">
+                    <a href="/admin.html" class="back-link" title="Voltar ao painel admin">
+                        <i class="fas fa-arrow-left fa-lg"></i>
+                    </a>
+                    <div>
+                        <span class="h5 mb-0 text-white fw-semibold">
+                            <i class="fas fa-chart-bar me-2"></i>Análise de Dados
+                        </span>
+                        <div class="text-white opacity-75 small">Atestados Médicos</div>
+                    </div>
+                </div>
+                <div class="col-auto text-end d-flex align-items-center gap-2">
+                    <span class="text-white opacity-75 small d-none d-md-inline">
+                        Olá, <span id="userName">...</span>
+                    </span>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/admin.html"><i class="fas fa-tachometer-alt me-2"></i>Painel Admin</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item text-danger" id="btnLogout"><i class="fas fa-sign-out-alt me-2"></i>Sair</button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid px-4 py-4 flex-grow-1" id="mainContent">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/admin.html">Painel Admin</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Análise de Dados</li>
+            </ol>
+        </nav>
+
+        <!-- Filters -->
+        <div class="filter-section mb-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-auto d-flex align-items-center">
+                    <span class="fw-semibold small text-primary"><i class="fas fa-filter me-1"></i>Filtros</span>
+                </div>
+                <div class="col-6 col-sm-auto">
+                    <label class="form-label small mb-1">Ano inicial</label>
+                    <select class="form-select form-select-sm" id="filtroAnoInicio" style="min-width:90px"></select>
+                </div>
+                <div class="col-6 col-sm-auto">
+                    <label class="form-label small mb-1">Ano final</label>
+                    <select class="form-select form-select-sm" id="filtroAnoFim" style="min-width:90px"></select>
+                </div>
+                <div class="col-6 col-sm-auto">
+                    <label class="form-label small mb-1">Status</label>
+                    <select class="form-select form-select-sm" id="filtroStatus" style="min-width:120px">
+                        <option value="">Todos</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Aprovado">Aprovado</option>
+                        <option value="Rejeitado">Rejeitado</option>
+                    </select>
+                </div>
+                <div class="col-auto d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" onclick="aplicarFiltros()">
+                        <i class="fas fa-search me-1"></i>Aplicar
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="limparFiltros()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="col-auto ms-auto d-none d-md-block">
+                    <small class="text-muted" id="filtroInfo">—</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-lg-3">
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fas fa-file-medical me-1"></i>Total de Atestados</div>
+                    <div class="kpi-value" id="kpiTotal">—</div>
+                    <div class="kpi-sub" id="kpiTotalSub">no período selecionado</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fas fa-bed me-1"></i>Média de Afastamento</div>
+                    <div class="kpi-value" id="kpiMedia">—</div>
+                    <div class="kpi-sub">dias por atestado</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fas fa-virus me-1"></i>CID Predominante</div>
+                    <div class="kpi-value" id="kpiCID" style="font-size:1.4rem">—</div>
+                    <div class="kpi-sub" id="kpiCIDSub">—</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fas fa-calendar-day me-1"></i>Dia Mais Crítico</div>
+                    <div class="kpi-value" id="kpiDia" style="font-size:1.4rem">—</div>
+                    <div class="kpi-sub" id="kpiDiaSub">maior nº de afastamentos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 1: Frequência Mensal + Status -->
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-lg-8">
+                <div class="chart-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-1">
+                        <div class="chart-title mb-0">
+                            <i class="fas fa-chart-line me-2 text-primary"></i>Frequência de Atestados por Mês
+                        </div>
+                        <small class="text-muted" id="badgeMensal">—</small>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chartMensal"></canvas>
+                    </div>
+                    <div class="insight-box" id="insightMensal">
+                        <i class="fas fa-lightbulb me-1" style="color:#f4a261"></i>
+                        <span id="insightMensalTexto">Carregando análise...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="chart-card d-flex flex-column">
+                    <div class="chart-title"><i class="fas fa-circle-dot me-2 text-primary"></i>Distribuição por Status</div>
+                    <div class="chart-container-sm flex-grow-1">
+                        <canvas id="chartStatus"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Top CIDs + Dia da Semana -->
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-6">
+                <div class="chart-card">
+                    <div class="chart-title"><i class="fas fa-virus me-2 text-primary"></i>Top 10 CIDs Mais Frequentes</div>
+                    <div class="chart-container">
+                        <canvas id="chartCID"></canvas>
+                    </div>
+                    <div class="insight-box" id="insightCID">
+                        <i class="fas fa-lightbulb me-1" style="color:#f4a261"></i>
+                        <span id="insightCIDTexto">Carregando análise...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="chart-card">
+                    <div class="chart-title"><i class="fas fa-calendar-week me-2 text-primary"></i>Afastamentos por Dia da Semana</div>
+                    <div class="chart-container">
+                        <canvas id="chartDiaSemana"></canvas>
+                    </div>
+                    <div class="insight-box" id="insightDia">
+                        <i class="fas fa-lightbulb me-1" style="color:#f4a261"></i>
+                        <span id="insightDiaTexto">Carregando análise...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Média Afastamento por Mês + Top Funcionários -->
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-6">
+                <div class="chart-card">
+                    <div class="chart-title"><i class="fas fa-clock me-2 text-primary"></i>Média de Dias de Afastamento por Mês</div>
+                    <div class="chart-container">
+                        <canvas id="chartMediaAfastamento"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="chart-card">
+                    <div class="chart-title"><i class="fas fa-users me-2 text-primary"></i>Top 5 Funcionários com Mais Atestados</div>
+                    <div class="chart-container">
+                        <canvas id="chartTopFuncionarios"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="export-section">
+            <div class="row align-items-center g-2">
+                <div class="col">
+                    <div class="fw-semibold small mb-0">
+                        <i class="fas fa-download me-2 text-primary"></i>Exportar Relatório
+                    </div>
+                    <small class="text-muted">Exporte os dados e gráficos do período filtrado</small>
+                </div>
+                <div class="col-auto d-flex gap-2 flex-wrap">
+                    <button class="btn btn-danger btn-sm" id="btnExportPDF" onclick="exportarPDF()">
+                        <i class="fas fa-file-pdf me-1"></i>PDF
+                    </button>
+                    <button class="btn btn-success btn-sm" id="btnExportXLSX" onclick="exportarXLSX()">
+                        <i class="fas fa-file-excel me-1"></i>Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-fluid px-4">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="small m-0">&copy; 2024 TechSolutions. Todos os direitos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="small m-0">Módulo de Análise v1.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // ============================================================
+        // CONSTANTES
+        // ============================================================
+        const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        const DIAS_SEMANA = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+        const PALETTE = [
+            '#2c7da0','#468faf','#2a9d8f','#e9c46a','#f4a261',
+            '#e76f51','#264653','#6d6875','#b5838d','#457b9d'
+        ];
+
+        // ============================================================
+        // ESTADO GLOBAL
+        // ============================================================
+        let todosAtestados = [];
+        let atestadosFiltrados = [];
+        let usuarios = {};
+
+        const charts = {
+            mensal: null, status: null, cid: null,
+            diaSemana: null, mediaAfastamento: null, topFuncionarios: null
+        };
+
+        // ============================================================
+        // HELPERS DE TEMA
+        // ============================================================
+        function isDark() { return document.body.classList.contains('alto-contraste'); }
+
+        function cores() {
+            const dark = isDark();
+            return {
+                texto: dark ? '#ffffff' : '#2b2d42',
+                grade: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+                fundo: dark ? '#1b1b1b' : '#ffffff'
+            };
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', async function () {
+            const usuarioId = localStorage.getItem('usuarioId');
+            const isAdmin  = localStorage.getItem('usuarioIsAdmin');
+            const nome     = localStorage.getItem('usuarioNome');
+
+            if (!usuarioId || isAdmin !== 'true') {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = nome || 'Admin';
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = '/login.html';
+            });
+
+            popularFiltroAnos();
+            await carregarDados(usuarioId);
+        });
+
+        // ============================================================
+        // CARREGAMENTO DE DADOS
+        // ============================================================
+        async function carregarDados(usuarioId) {
+            mostrarLoading('Carregando atestados...');
+            try {
+                const [rAtestados, rUsuarios] = await Promise.all([
+                    fetch(`/api/atestado?usuarioId=${usuarioId}`),
+                    fetch(`/api/usuario`)
+                ]);
+
+                if (!rAtestados.ok) throw new Error('Falha ao carregar atestados');
+                todosAtestados = await rAtestados.json();
+
+                if (rUsuarios.ok) {
+                    const lista = await rUsuarios.json();
+                    lista.forEach(u => { usuarios[u.id] = u.nome; });
+                }
+
+                atestadosFiltrados = [...todosAtestados];
+                renderizarTudo();
+            } catch (e) {
+                console.error(e);
+                alert('Erro ao carregar dados: ' + e.message);
+            } finally {
+                esconderLoading();
+            }
+        }
+
+        // ============================================================
+        // FILTROS
+        // ============================================================
+        function popularFiltroAnos() {
+            const anoAtual = new Date().getFullYear();
+            const selectInicio = document.getElementById('filtroAnoInicio');
+            const selectFim    = document.getElementById('filtroAnoFim');
+
+            [selectInicio, selectFim].forEach(sel => {
+                sel.innerHTML = '<option value="">Todos</option>';
+                for (let a = anoAtual; a >= anoAtual - 6; a--) {
+                    const opt = document.createElement('option');
+                    opt.value = a; opt.textContent = a;
+                    sel.appendChild(opt);
+                }
+            });
+        }
+
+        function aplicarFiltros() {
+            const anoInicio = parseInt(document.getElementById('filtroAnoInicio').value) || null;
+            const anoFim    = parseInt(document.getElementById('filtroAnoFim').value)    || null;
+            const status    = document.getElementById('filtroStatus').value;
+
+            atestadosFiltrados = todosAtestados.filter(a => {
+                const ano = new Date(a.dataAtestado || a.dataCadastro).getFullYear();
+                if (anoInicio && ano < anoInicio) return false;
+                if (anoFim    && ano > anoFim)    return false;
+                if (status    && a.status !== status) return false;
+                return true;
+            });
+
+            renderizarTudo();
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtroAnoInicio').value = '';
+            document.getElementById('filtroAnoFim').value    = '';
+            document.getElementById('filtroStatus').value    = '';
+            atestadosFiltrados = [...todosAtestados];
+            renderizarTudo();
+        }
+
+        // ============================================================
+        // RENDER GERAL
+        // ============================================================
+        function renderizarTudo() {
+            atualizarInfoFiltro();
+            renderizarKPIs();
+            renderizarChartMensal();
+            renderizarChartStatus();
+            renderizarChartCID();
+            renderizarChartDiaSemana();
+            renderizarChartMediaAfastamento();
+            renderizarChartTopFuncionarios();
+        }
+
+        function atualizarInfoFiltro() {
+            const total = todosAtestados.length;
+            const filtrado = atestadosFiltrados.length;
+            const el = document.getElementById('filtroInfo');
+            if (el) {
+                el.textContent = filtrado === total
+                    ? `${total} atestado(s) no total`
+                    : `Exibindo ${filtrado} de ${total} atestado(s)`;
+            }
+        }
+
+        // ============================================================
+        // KPIs
+        // ============================================================
+        function renderizarKPIs() {
+            const total = atestadosFiltrados.length;
+            document.getElementById('kpiTotal').textContent = total;
+            document.getElementById('kpiTotalSub').textContent = 'no período selecionado';
+
+            // Média de dias
+            const comDias = atestadosFiltrados.filter(a => a.diasAfastamento > 0);
+            if (comDias.length > 0) {
+                const soma = comDias.reduce((s, a) => s + a.diasAfastamento, 0);
+                document.getElementById('kpiMedia').textContent = (soma / comDias.length).toFixed(1) + 'd';
+            } else {
+                document.getElementById('kpiMedia').textContent = 'N/A';
+            }
+
+            // CID predominante
+            const cidCount = {};
+            atestadosFiltrados.forEach(a => { if (a.cid) cidCount[a.cid] = (cidCount[a.cid] || 0) + 1; });
+            const cidEntries = Object.entries(cidCount).sort((x, y) => y[1] - x[1]);
+            if (cidEntries.length > 0) {
+                document.getElementById('kpiCID').textContent = cidEntries[0][0];
+                document.getElementById('kpiCIDSub').textContent = cidEntries[0][1] + ' ocorrência(s)';
+            } else {
+                document.getElementById('kpiCID').textContent = 'N/A';
+                document.getElementById('kpiCIDSub').textContent = 'sem dados de CID';
+            }
+
+            // Dia mais crítico
+            const diaCount = [0,0,0,0,0,0,0];
+            atestadosFiltrados.forEach(a => {
+                const d = new Date(a.dataAtestado || a.dataCadastro).getDay();
+                diaCount[d]++;
+            });
+            if (total > 0) {
+                const maxIdx = diaCount.indexOf(Math.max(...diaCount));
+                document.getElementById('kpiDia').textContent = DIAS_SEMANA[maxIdx].substring(0, 3) + '.';
+                document.getElementById('kpiDiaSub').textContent = diaCount[maxIdx] + ' atestado(s)';
+            } else {
+                document.getElementById('kpiDia').textContent = '—';
+                document.getElementById('kpiDiaSub').textContent = '—';
+            }
+        }
+
+        // ============================================================
+        // CHART: Frequência Mensal
+        // ============================================================
+        function renderizarChartMensal() {
+            const byMes = {};
+            atestadosFiltrados.forEach(a => {
+                const d = new Date(a.dataAtestado || a.dataCadastro);
+                const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                byMes[key] = (byMes[key] || 0) + 1;
+            });
+
+            const keys   = Object.keys(byMes).sort();
+            const labels = keys.map(k => { const [y,m]=k.split('-'); return `${MESES[+m-1]}/${y}`; });
+            const data   = keys.map(k => byMes[k]);
+
+            // Insight
+            document.getElementById('badgeMensal').textContent = `${atestadosFiltrados.length} atestado(s)`;
+            let insight = 'Nenhum dado disponível no período.';
+            if (data.length >= 2) {
+                const maxIdx = data.indexOf(Math.max(...data));
+                const minIdx = data.indexOf(Math.min(...data));
+                const media  = (data.reduce((s,v)=>s+v,0)/data.length).toFixed(1);
+                insight = `Pico em ${labels[maxIdx]} (${data[maxIdx]} atestados). `
+                        + `Menor incidência em ${labels[minIdx]} (${data[minIdx]}). `
+                        + `Média mensal: ${media}.`;
+            } else if (data.length === 1) {
+                insight = `Apenas um mês com dados: ${labels[0]} (${data[0]} atestado(s)).`;
+            }
+            document.getElementById('insightMensalTexto').textContent = insight;
+
+            const c = cores();
+            if (charts.mensal) charts.mensal.destroy();
+            charts.mensal = new Chart(document.getElementById('chartMensal'), {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Atestados',
+                        data,
+                        backgroundColor: PALETTE[0] + 'cc',
+                        borderColor: PALETTE[0],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: c.grade }, ticks: { color: c.texto, maxRotation: 45, font:{size:11} } },
+                        y: { beginAtZero:true, grid: { color: c.grade }, ticks: { color: c.texto, stepSize:1, font:{size:11} } }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // CHART: Status (Doughnut)
+        // ============================================================
+        function renderizarChartStatus() {
+            const counts = { Pendente:0, Aprovado:0, Rejeitado:0 };
+            atestadosFiltrados.forEach(a => { counts[a.status] = (counts[a.status]||0)+1; });
+            const total = atestadosFiltrados.length || 1;
+
+            const c = cores();
+            if (charts.status) charts.status.destroy();
+            charts.status = new Chart(document.getElementById('chartStatus'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pendente','Aprovado','Rejeitado'],
+                    datasets: [{
+                        data: [counts.Pendente, counts.Aprovado, counts.Rejeitado],
+                        backgroundColor: ['#e9c46a','#2a9d8f','#e76f51'],
+                        borderColor: c.fundo,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '62%',
+                    plugins: {
+                        legend: { position:'bottom', labels:{ color:c.texto, padding:14, font:{size:12} } },
+                        tooltip: { callbacks: {
+                            label: ctx => ` ${ctx.label}: ${ctx.parsed} (${((ctx.parsed/total)*100).toFixed(1)}%)`
+                        }}
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // CHART: Top 10 CIDs (Horizontal Bar)
+        // ============================================================
+        function renderizarChartCID() {
+            const cidCount = {};
+            atestadosFiltrados.forEach(a => { if (a.cid) cidCount[a.cid] = (cidCount[a.cid]||0)+1; });
+
+            const entries = Object.entries(cidCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
+            const c = cores();
+
+            let insight;
+            if (entries.length === 0) {
+                insight = 'Sem dados de CID disponíveis. Novos atestados enviados pelo formulário já terão o CID registrado.';
+            } else {
+                const top = entries[0];
+                const somaTop10 = entries.reduce((s,e)=>s+e[1],0);
+                const pct = ((top[1]/somaTop10)*100).toFixed(0);
+                insight = `"${top[0]}" representa ${pct}% dos registros com CID (${top[1]} ocorrência(s)). `
+                        + (entries.length > 1 ? `Segundo lugar: "${entries[1][0]}" (${entries[1][1]}).` : '');
+            }
+            document.getElementById('insightCIDTexto').textContent = insight;
+
+            if (charts.cid) charts.cid.destroy();
+
+            if (entries.length === 0) {
+                charts.cid = new Chart(document.getElementById('chartCID'), {
+                    type: 'bar', data: { labels:[], datasets:[] },
+                    options: {
+                        responsive:true, maintainAspectRatio:false,
+                        plugins: {
+                            title: { display:true, text:'Sem dados de CID ainda', color:c.texto, font:{size:13} },
+                            legend: { display:false }
+                        }
+                    }
+                });
+                return;
+            }
+
+            charts.cid = new Chart(document.getElementById('chartCID'), {
+                type: 'bar',
+                data: {
+                    labels: entries.map(e=>e[0]),
+                    datasets: [{
+                        label: 'Ocorrências',
+                        data: entries.map(e=>e[1]),
+                        backgroundColor: PALETTE.slice(0,entries.length).map(p=>p+'cc'),
+                        borderColor:     PALETTE.slice(0,entries.length),
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend:{ display:false } },
+                    scales: {
+                        x: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, stepSize:1, font:{size:11} } },
+                        y: { grid:{ display:false }, ticks:{ color:c.texto, font:{size:11} } }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // CHART: Dia da Semana
+        // ============================================================
+        function renderizarChartDiaSemana() {
+            const counts = [0,0,0,0,0,0,0];
+            atestadosFiltrados.forEach(a => { counts[new Date(a.dataAtestado||a.dataCadastro).getDay()]++; });
+
+            const maxVal = Math.max(...counts);
+            const c = cores();
+            const bgColors     = counts.map(v => v===maxVal ? '#e76f51cc' : PALETTE[0]+'cc');
+            const borderColors = counts.map(v => v===maxVal ? '#e76f51'   : PALETTE[0]);
+
+            // Insight
+            const totalUteis = counts.slice(1,6).reduce((s,v)=>s+v,0);
+            const totalFds   = counts[0]+counts[6];
+            const total      = atestadosFiltrados.length;
+            const maxIdx     = counts.indexOf(maxVal);
+
+            let insight = 'Nenhum dado disponível.';
+            if (total > 0) {
+                insight = `${DIAS_SEMANA[maxIdx]} tem mais afastamentos (${maxVal}). `
+                        + `Dias úteis: ${totalUteis} (${total > 0 ? ((totalUteis/total)*100).toFixed(0) : 0}%) | `
+                        + `Fins de semana: ${totalFds}.`;
+            }
+            document.getElementById('insightDiaTexto').textContent = insight;
+
+            if (charts.diaSemana) charts.diaSemana.destroy();
+            charts.diaSemana = new Chart(document.getElementById('chartDiaSemana'), {
+                type: 'bar',
+                data: {
+                    labels: DIAS_SEMANA,
+                    datasets: [{
+                        label: 'Atestados',
+                        data: counts,
+                        backgroundColor: bgColors,
+                        borderColor: borderColors,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend:{ display:false } },
+                    scales: {
+                        x: { grid:{ display:false }, ticks:{ color:c.texto, font:{size:11} } },
+                        y: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, stepSize:1, font:{size:11} } }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // CHART: Média de Dias de Afastamento por Mês
+        // ============================================================
+        function renderizarChartMediaAfastamento() {
+            const comDias = atestadosFiltrados.filter(a => a.diasAfastamento > 0);
+            const byMes = {};
+            comDias.forEach(a => {
+                const d = new Date(a.dataAtestado||a.dataCadastro);
+                const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                if (!byMes[key]) byMes[key] = [];
+                byMes[key].push(a.diasAfastamento);
+            });
+
+            const keys   = Object.keys(byMes).sort();
+            const labels = keys.map(k => { const [y,m]=k.split('-'); return `${MESES[+m-1]}/${y}`; });
+            const data   = keys.map(k => parseFloat((byMes[k].reduce((s,v)=>s+v,0)/byMes[k].length).toFixed(1)));
+            const c = cores();
+
+            if (charts.mediaAfastamento) charts.mediaAfastamento.destroy();
+
+            if (data.length === 0) {
+                charts.mediaAfastamento = new Chart(document.getElementById('chartMediaAfastamento'), {
+                    type: 'bar', data: { labels:[], datasets:[] },
+                    options: {
+                        responsive:true, maintainAspectRatio:false,
+                        plugins: {
+                            title: { display:true, text:'Sem dados de afastamento ainda', color:c.texto, font:{size:13} },
+                            legend:{ display:false }
+                        }
+                    }
+                });
+                return;
+            }
+
+            charts.mediaAfastamento = new Chart(document.getElementById('chartMediaAfastamento'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Média de dias',
+                        data,
+                        borderColor: '#2a9d8f',
+                        backgroundColor: 'rgba(42,157,143,0.12)',
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#2a9d8f',
+                        fill: true,
+                        tension: 0.35
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display:false },
+                        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} dias (média)` } }
+                    },
+                    scales: {
+                        x: { grid:{ color:c.grade }, ticks:{ color:c.texto, maxRotation:45, font:{size:11} } },
+                        y: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, font:{size:11} } }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // CHART: Top 5 Funcionários
+        // ============================================================
+        function renderizarChartTopFuncionarios() {
+            const byUser = {};
+            atestadosFiltrados.forEach(a => { byUser[a.usuarioId] = (byUser[a.usuarioId]||0)+1; });
+
+            const entries = Object.entries(byUser).sort((a,b)=>b[1]-a[1]).slice(0,5);
+            const c = cores();
+
+            if (charts.topFuncionarios) charts.topFuncionarios.destroy();
+            charts.topFuncionarios = new Chart(document.getElementById('chartTopFuncionarios'), {
+                type: 'bar',
+                data: {
+                    labels: entries.map(e => usuarios[e[0]] || `ID ${e[0]}`),
+                    datasets: [{
+                        label: 'Atestados',
+                        data: entries.map(e=>e[1]),
+                        backgroundColor: PALETTE.slice(0,5).map(p=>p+'cc'),
+                        borderColor:     PALETTE.slice(0,5),
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend:{ display:false } },
+                    scales: {
+                        x: { grid:{ display:false }, ticks:{ color:c.texto, maxRotation:30, font:{size:11} } },
+                        y: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, stepSize:1, font:{size:11} } }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // EXPORT: PDF
+        // ============================================================
+        async function exportarPDF() {
+            const btn = document.getElementById('btnExportPDF');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Gerando...';
+            mostrarLoading('Gerando PDF, aguarde...');
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const content      = document.getElementById('mainContent');
+                const exportSection = content.querySelector('.export-section');
+                const escuro       = isDark();
+
+                // Oculta a seção de exportação para não aparecer no PDF
+                if (exportSection) exportSection.style.display = 'none';
+
+                const canvas = await html2canvas(content, {
+                    scale: 1.5,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: escuro ? '#000000' : '#f8f9fa',
+                    windowWidth: content.scrollWidth
+                });
+
+                // Restaura a seção de exportação
+                if (exportSection) exportSection.style.display = '';
+
+                const pdf       = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
+                const pW        = pdf.internal.pageSize.getWidth();
+                const pH        = pdf.internal.pageSize.getHeight();
+                const margin    = 10;
+                const imgW      = pW - margin * 2;
+                const imgH      = (canvas.height * imgW) / canvas.width;
+                const dataStr   = new Date().toLocaleDateString('pt-BR');
+                const horaStr   = new Date().toLocaleTimeString('pt-BR');
+                const escala    = canvas.width / imgW; // pixels por mm
+
+                // Calcula posições das linhas de conteúdo (.row) para evitar cortes
+                const contentRect  = content.getBoundingClientRect();
+                const rowBreaks    = [0];
+                content.querySelectorAll('.row.g-3').forEach(row => {
+                    const rect   = row.getBoundingClientRect();
+                    const topMM  = (rect.top - contentRect.top) * (imgH / content.scrollHeight);
+                    if (topMM > 0) rowBreaks.push(topMM);
+                });
+                rowBreaks.push(imgH);
+
+                function quebraNatural(offsetMM, maxMM) {
+                    let melhor = offsetMM;
+                    for (const bp of rowBreaks) {
+                        if (bp > offsetMM && bp <= maxMM) melhor = bp;
+                    }
+                    return melhor > offsetMM ? melhor : maxMM;
+                }
+
+                // Título
+                pdf.setFontSize(14);
+                pdf.setTextColor(44, 125, 160);
+                pdf.text('Relatório de Análise de Atestados Médicos', margin, 14);
+                pdf.setFontSize(9);
+                pdf.setTextColor(120);
+                pdf.text(`Gerado em: ${dataStr} às ${horaStr}  |  Total no período: ${atestadosFiltrados.length} atestado(s)`, margin, 20);
+
+                let yPos     = 26;
+                let offsetMM = 0;
+
+                while (offsetMM < imgH) {
+                    const espacoMM      = pH - yPos - margin;
+                    const maxOffsetMM   = offsetMM + espacoMM;
+                    const fimSliceMM    = quebraNatural(offsetMM, Math.min(maxOffsetMM, imgH));
+                    const alturaSliceMM = fimSliceMM - offsetMM;
+
+                    const srcY        = Math.round(offsetMM * escala);
+                    const srcH        = Math.round(alturaSliceMM * escala);
+                    const sliceCanvas = document.createElement('canvas');
+                    sliceCanvas.width  = canvas.width;
+                    sliceCanvas.height = srcH;
+                    const ctx = sliceCanvas.getContext('2d');
+                    ctx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+
+                    pdf.addImage(sliceCanvas.toDataURL('image/jpeg', 0.88), 'JPEG', margin, yPos, imgW, alturaSliceMM);
+
+                    offsetMM = fimSliceMM;
+                    if (offsetMM < imgH) { pdf.addPage(); yPos = margin; }
+                }
+
+                pdf.save(`relatorio-atestados-${new Date().toISOString().split('T')[0]}.pdf`);
+            } catch (e) {
+                console.error(e);
+                const exportSection = document.querySelector('#mainContent .export-section');
+                if (exportSection) exportSection.style.display = '';
+                alert('Erro ao gerar PDF: ' + e.message);
+            } finally {
+                esconderLoading();
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-file-pdf me-1"></i>PDF';
+            }
+        }
+
+        // ============================================================
+        // EXPORT: XLSX
+        // ============================================================
+        function exportarXLSX() {
+            const btn = document.getElementById('btnExportXLSX');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Gerando...';
+
+            try {
+                const wb = XLSX.utils.book_new();
+
+                // Aba 1: Dados brutos
+                const brutos = atestadosFiltrados.map(a => ({
+                    'ID': a.id,
+                    'Data Atestado':  new Date(a.dataAtestado).toLocaleDateString('pt-BR'),
+                    'Funcionário':    usuarios[a.usuarioId] || `ID ${a.usuarioId}`,
+                    'Médico':         a.nomeMedico,
+                    'CRM':            a.crm,
+                    'CID':            a.cid || 'N/A',
+                    'Dias Afastamento': a.diasAfastamento || 'N/A',
+                    'Status':         a.status,
+                    'Motivo Rejeição': a.motivoRejeicao || '',
+                    'Data Cadastro':  new Date(a.dataCadastro).toLocaleDateString('pt-BR')
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(brutos), 'Dados');
+
+                // Aba 2: Por Mês
+                const byMes = {};
+                atestadosFiltrados.forEach(a => {
+                    const d = new Date(a.dataAtestado||a.dataCadastro);
+                    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    byMes[k] = (byMes[k]||0)+1;
+                });
+                const dadosMes = Object.entries(byMes).sort().map(([k,v]) => {
+                    const [y,m]=k.split('-');
+                    return { 'Mês/Ano': `${MESES[+m-1]}/${y}`, 'Quantidade': v };
+                });
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosMes.length ? dadosMes : [{Aviso:'Sem dados'}]), 'Por Mês');
+
+                // Aba 3: Por CID
+                const cidCount = {};
+                atestadosFiltrados.forEach(a => { if (a.cid) cidCount[a.cid]=(cidCount[a.cid]||0)+1; });
+                const dadosCID = Object.entries(cidCount).sort((a,b)=>b[1]-a[1]).map(([k,v]) => ({ 'CID':k, 'Quantidade':v }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosCID.length ? dadosCID : [{Aviso:'Sem dados de CID'}]), 'Por CID');
+
+                // Aba 4: Por Dia da Semana
+                const diaCount = [0,0,0,0,0,0,0];
+                atestadosFiltrados.forEach(a => { diaCount[new Date(a.dataAtestado||a.dataCadastro).getDay()]++; });
+                const dadosDia = DIAS_SEMANA.map((d,i) => ({ 'Dia':d, 'Quantidade':diaCount[i] }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosDia), 'Por Dia');
+
+                // Aba 5: Média de Afastamento
+                const comDias = atestadosFiltrados.filter(a=>a.diasAfastamento>0);
+                const byMesDias = {};
+                comDias.forEach(a => {
+                    const d = new Date(a.dataAtestado||a.dataCadastro);
+                    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    if (!byMesDias[k]) byMesDias[k]=[];
+                    byMesDias[k].push(a.diasAfastamento);
+                });
+                const dadosMedia = Object.entries(byMesDias).sort().map(([k,arr]) => {
+                    const [y,m]=k.split('-');
+                    return {
+                        'Mês/Ano': `${MESES[+m-1]}/${y}`,
+                        'Média Dias': parseFloat((arr.reduce((s,v)=>s+v,0)/arr.length).toFixed(1)),
+                        'Nº Atestados': arr.length
+                    };
+                });
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosMedia.length ? dadosMedia : [{Aviso:'Sem dados de afastamento'}]), 'Média Afastamento');
+
+                // Aba 6: Por Funcionário
+                const byUser = {};
+                atestadosFiltrados.forEach(a => { byUser[a.usuarioId]=(byUser[a.usuarioId]||0)+1; });
+                const dadosFunc = Object.entries(byUser).sort((a,b)=>b[1]-a[1]).map(([id,qtd]) => ({
+                    'Funcionário': usuarios[id]||`ID ${id}`, 'Quantidade': qtd
+                }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosFunc.length ? dadosFunc : [{Aviso:'Sem dados'}]), 'Por Funcionário');
+
+                XLSX.writeFile(wb, `relatorio-atestados-${new Date().toISOString().split('T')[0]}.xlsx`);
+            } catch (e) {
+                console.error(e);
+                alert('Erro ao gerar Excel: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-file-excel me-1"></i>Excel';
+            }
+        }
+
+        // ============================================================
+        // DARK MODE (mesmo padrão de todas as páginas)
+        // ============================================================
+        (function () {
+            const btn  = document.getElementById('contraste-toggle');
+            const body = document.body;
+            const KEY  = 'altoContrasteAtivo';
+
+            function aplicar() {
+                if (localStorage.getItem(KEY) === 'true') body.classList.add('alto-contraste');
+                else body.classList.remove('alto-contraste');
+            }
+
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    body.classList.toggle('alto-contraste');
+                    localStorage.setItem(KEY, body.classList.contains('alto-contraste') ? 'true' : 'false');
+                    if (todosAtestados.length > 0) renderizarTudo();
+                });
+            }
+
+            aplicar();
+        })();
+
+        // ============================================================
+        // LOADING
+        // ============================================================
+        function mostrarLoading(txt) {
+            document.getElementById('loadingText').textContent = txt || 'Aguarde...';
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+        function esconderLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+    </script>
+
+</body>
+</html>

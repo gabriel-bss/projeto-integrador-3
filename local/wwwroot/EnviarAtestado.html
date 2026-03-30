@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Atestado - Sistema de Atestados Médicos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2c7da0;
+            --secondary-color: #468faf;
+            --background-color: #f8f9fa;
+            --text-color: #2b2d42;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            margin: 2rem auto;
+        }
+
+        .form-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(44, 125, 160, 0.25);
+            }
+
+            /* Estilos para validação em tempo real */
+            .form-control:invalid:not(:placeholder-shown) {
+                border-color: #dc3545;
+            }
+
+            .form-control:valid:not(:placeholder-shown) {
+                border-color: #198754;
+            }
+        /* Fim estilos validação */
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline-secondary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+            .btn-outline-secondary:hover {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+        .icon-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .icon-container i {
+                font-size: 3rem;
+                color: var(--primary-color);
+            }
+
+        .required-field::after {
+            content: "*";
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .alert {
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 1.5rem 0;
+            background-color: #f1f1f1;
+        }
+
+        .file-upload-wrapper {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .file-upload-wrapper:hover {
+                border-color: var(--primary-color);
+            }
+
+        .file-upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.5rem;
+        }
+
+        /* ==== Botão de Alto Contraste ==== */
+        .btn-contraste {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-contraste:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        /* ==== REGRA DE RESPONSIVIDADE DO BOTÃO ==== */
+        @media (max-width: 575.98px) {
+            .btn-contraste {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                right: 10px;
+                top: 50px;
+            }
+        }
+
+
+        /* ==== Tema de Alto Contraste ==== */
+        body.alto-contraste {
+            background-color: #000 !important;
+            color: #fff !important;
+        }
+
+        body.alto-contraste .header {
+            background: #1b1b1b !important;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        body.alto-contraste .footer {
+            background-color: #1b1b1b !important;
+        }
+
+        body.alto-contraste .form-container {
+            background-color: #1b1b1b !important;
+            border: 1px solid #fff;
+        }
+
+        body.alto-contraste .form-label {
+            color: #fff !important;
+        }
+
+        body.alto-contraste .form-control {
+            background-color: #222 !important;
+            color: #ffffff !important;
+            border: 1px solid #fff;
+        }
+
+        body.alto-contraste .form-control::placeholder {
+            color: #bbb !important;
+            opacity: 1;
+        }
+
+        body.alto-contraste input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        body.alto-contraste .breadcrumb a {
+            color: #fff !important;
+        }
+
+        body.alto-contraste .breadcrumb-item.active {
+            color: #fff !important;
+        }
+
+        body.alto-contraste .file-upload-wrapper {
+            border-color: #fff;
+        }
+
+        body.alto-contraste .file-upload-wrapper {
+            border-color: #fff;
+        }
+
+        body.alto-contraste .btn-primary {
+            background-color: #fff !important;
+            color: #000 !important;
+            border: 2px solid #fff !important;
+        }
+
+        body.alto-contraste .btn-outline-secondary {
+            background-color: #222 !important;
+            color: #fff !important;
+            border: 1px solid #fff !important;
+        }
+
+        body.alto-contraste .dropdown-menu {
+            background-color: #222 !important;
+        }
+
+        body.alto-contraste .dropdown-item {
+            color: #fff !important;
+        }
+
+        body.alto-contraste .dropdown-item:hover {
+            background-color: var(--primary-color) !important;
+        }
+
+        body.alto-contraste .text-muted {
+            color: #aaa !important;
+        }
+
+        body.alto-contraste .breadcrumb a {
+            color: var(--primary-color) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="contraste-toggle" class="btn-contraste" aria-label="Alternar alto contraste">
+        <i class="fas fa-adjust"></i> Acessibilidade
+    </button>
+
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="h4 mb-0">Portal do Funcionário</h1>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex justify-content-md-end align-items-center">
+                        <span class="me-3" id="userGreeting">Olá, <span id="userName">Carregando...</span></span>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
+                                <li><a class="dropdown-item" href="/funcionario.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><button class="dropdown-item" id="btnLogout"><i class="fas fa-sign-out-alt me-2"></i>Sair</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/funcionario.html">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Enviar Atestado</li>
+            </ol>
+        </nav>
+
+        <div class="form-container">
+            <div class="icon-container">
+                <i class="fas fa-file-medical"></i>
+            </div>
+            <h2 class="h4 text-center mb-4">Envio de Atestado Médico</h2>
+
+            <form id="atestadoForm" class="needs-validation" enctype="multipart/form-data" novalidate>
+                <div class="mb-3">
+                    <label for="dataAtestado" class="form-label required-field">Data do Atestado</label>
+                    <input type="date" class="form-control" id="dataAtestado" required>
+                    <div class="invalid-feedback">
+                        Por favor, informe a data do atestado.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nomeMedico" class="form-label required-field">Nome do Médico</label>
+                    <input type="text" class="form-control" id="nomeMedico" placeholder="Nome completo do médico" required>
+                    <div class="invalid-feedback">
+                        Por favor, informe o nome do médico.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="crm" class="form-label required-field">CRM do Médico</label>
+                    <input type="text" class="form-control" id="crm" placeholder="Número do CRM com UF (Ex: 12345-SP)" required>
+                    <div class="invalid-feedback">
+                        Por favor, informe o CRM do médico.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="cid" class="form-label required-field">CID</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="cid" placeholder="Ex: A09 ou J11.1" required>
+                        <span class="input-group-text" id="cid-spinner" style="display: none;">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    <div class="invalid-feedback" id="cid-feedback">
+                        Por favor, informe o CID no formato válido.
+                    </div>
+                    <div class="valid-feedback" id="cid-success-feedback" style="display: none;">
+                        CID válido.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="diasAfastamento" class="form-label required-field">Dias de Afastamento</label>
+                    <input type="number" class="form-control" id="diasAfastamento" min="1" max="365" placeholder="Número de dias de afastamento" required>
+                    <div class="invalid-feedback">
+                        Por favor, informe o número de dias de afastamento.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="descricao" class="form-label">Observações</label>
+                    <textarea class="form-control" id="descricao" rows="4" placeholder="Descreva informações adicionais importantes sobre o atestado (opcional)"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label required-field">Arquivo do Atestado</label>
+                    <div class="file-upload-wrapper" id="fileUploadWrapper">
+                        <input type="file" id="arquivo" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" required>
+                        <div class="file-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <p class="mb-1">Arraste e solte o arquivo aqui ou clique para selecionar</p>
+                        <p class="text-muted small mb-0">Formatos aceitos: PDF, JPG, JPEG, PNG</p>
+                        <div class="file-name mt-3" id="fileName"></div>
+                        <div class="invalid-feedback">
+                            Por favor, selecione um arquivo de atestado.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="/funcionario.html" class="btn btn-outline-secondary me-md-2">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i>Enviar Atestado
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="small m-0">&copy; 2024 TechSolutions. Todos os direitos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="small m-0">Portal do Funcionário v1.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const usuarioId = localStorage.getItem('usuarioId');
+            const usuarioNome = localStorage.getItem('usuarioNome');
+            const usuarioIsAdmin = localStorage.getItem('usuarioIsAdmin');
+
+            if (!usuarioId || usuarioIsAdmin === 'true') {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = usuarioNome;
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dataAtestado').value = today;
+            document.getElementById('dataAtestado').max = today;
+
+            document.getElementById('btnLogout').addEventListener('click', function () {
+                localStorage.clear();
+                window.location.href = '/login.html';
+            });
+
+            // --- Configuração do Upload ---
+            const fileUploadWrapper = document.getElementById('fileUploadWrapper');
+            const fileInput = document.getElementById('arquivo');
+            const fileName = document.getElementById('fileName');
+
+            fileUploadWrapper.addEventListener('click', () => fileInput.click());
+
+            fileUploadWrapper.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadWrapper.style.borderColor = 'var(--primary-color)';
+                fileUploadWrapper.style.backgroundColor = 'rgba(44, 125, 160, 0.05)';
+            });
+
+            fileUploadWrapper.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                fileUploadWrapper.style.borderColor = '#dee2e6';
+                fileUploadWrapper.style.backgroundColor = '';
+            });
+
+            fileUploadWrapper.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadWrapper.style.borderColor = '#dee2e6';
+                fileUploadWrapper.style.backgroundColor = '';
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    updateFileName(fileInput.files[0].name);
+                }
+            });
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length) {
+                    updateFileName(fileInput.files[0].name);
+                }
+            });
+
+            function updateFileName(name) {
+                fileName.textContent = name;
+                fileName.style.display = 'block';
+            }
+
+            // --- ================== BLOCO DE VALIDAÇÃO DO CID ================== ---
+            const cidInput = document.getElementById('cid');
+            const cidFeedback = document.getElementById('cid-feedback');
+            const cidSuccessFeedback = document.getElementById('cid-success-feedback');
+            const cidSpinner = document.getElementById('cid-spinner');
+
+            const cidRegex = /^[A-Z]\d{2}(\.\d{1,2})?$/;
+            let isCidValidating = false;
+
+            // Converter para maiúsculas enquanto digita
+            cidInput.addEventListener('input', function () {
+                this.value = this.value.toUpperCase();
+               
+                if (this.validity.customError) {
+                    this.setCustomValidity("");
+                    this.classList.remove('is-invalid');
+                    cidFeedback.style.display = 'none';
+                }
+            });
+
+            // Disparar a validação da API quando o usuário sair do campo
+            cidInput.addEventListener('blur', async function () {
+                const cidValue = this.value.trim().toUpperCase();
+
+                this.classList.remove('is-valid', 'is-invalid');
+                cidSuccessFeedback.style.display = 'none';
+                cidFeedback.style.display = 'none';
+                this.setCustomValidity("");
+
+                if (cidValue === "") {
+                    cidFeedback.textContent = "Por favor, informe o CID.";
+                    
+                    return;
+                }
+
+                // Validação de Formato
+                if (!cidRegex.test(cidValue)) {
+                    this.setCustomValidity("Formato de CID inválido.");
+                    cidFeedback.textContent = "Formato inválido. Use o padrão A00 ou A00.0";
+                    this.classList.add('is-invalid');
+                    cidFeedback.style.display = 'block'; 
+                    return;
+                }
+
+                // Validação na API
+                isCidValidating = true;
+                cidSpinner.style.display = 'block';
+
+                try {
+                    const url = `/api/Atestado/validar?codigo=${cidValue}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    if (response.ok && data.valido) {
+                        // VÁLIDO
+                        this.setCustomValidity(""); 
+                        this.classList.add('is-valid');
+                        cidSuccessFeedback.textContent = "CID válido.";
+                        cidSuccessFeedback.style.display = 'block';
+                    } else {
+                        // INVÁLIDO (API não encontrou ou erro na API)
+                        this.setCustomValidity(data.mensagem || "CID não encontrado.");
+                        cidFeedback.textContent = data.mensagem || "CID não encontrado.";
+                        this.classList.add('is-invalid');
+                        cidFeedback.style.display = 'block';
+                    }
+
+                } catch (error) {
+                    console.error("Erro ao validar CID:", error);
+                    // Erro de Rede
+                    this.setCustomValidity("Não foi possível validar o CID. Tente novamente."); 
+                    cidFeedback.textContent = "Erro de conexão ao validar o CID. Verifique sua rede.";
+                    this.classList.add('is-invalid');
+                    cidFeedback.style.display = 'block'; 
+                } finally {
+                    isCidValidating = false;
+                    cidSpinner.style.display = 'none';
+                }
+            });
+            // --- ================== FIM DA VALIDAÇÃO DO CID ================== ---
+
+
+            // Lidar com o envio do formulário
+            document.getElementById('atestadoForm').addEventListener('submit', async function (e) {
+                
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Bloqueia se a validação estiver em andamento
+                if (isCidValidating) {
+                    cidInput.focus();
+                    return;
+                }
+               
+                this.classList.add('was-validated');
+
+                // Verificação explícita do CID antes de checar o resto
+                if (cidInput.value !== "" && !cidInput.validity.valid) {
+                    // Se tem algo digitado mas é inválido (formato ou API falhou), foca nele
+                    cidFeedback.style.display = 'block';
+                    cidInput.focus();
+                    return; 
+                }             
+                if (cidInput.value === "") {
+                    cidFeedback.textContent = "Por favor, informe o CID."; // Garante a msg correta
+                    cidFeedback.style.display = 'block';
+                    cidInput.focus();
+                    return;
+                }
+
+                if (!this.checkValidity()) {
+                    return;
+                }
+
+                // Criar FormData para envio do arquivo
+                // Se chegou até aqui, o formulário é válido! Prossegue com o envio.
+                const formData = new FormData();
+                formData.append('UsuarioId', usuarioId);
+                formData.append('DataAtestado', document.getElementById('dataAtestado').value);
+                formData.append('NomeMedico', document.getElementById('nomeMedico').value);
+                formData.append('CRM', document.getElementById('crm').value);
+                formData.append('CID', document.getElementById('cid').value);
+                formData.append('DiasAfastamento', document.getElementById('diasAfastamento').value);
+                formData.append('Descricao', document.getElementById('descricao').value);
+                formData.append('Arquivo', fileInput.files[0]);
+
+                const submitButton = this.querySelector('button[type="submit"]');
+                try {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
+
+                    // Enviar para a API
+                    const response = await fetch('/api/Atestado/Upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        showAlert('success', 'Atestado enviado com sucesso!');
+                        this.reset();
+                        fileName.textContent = '';
+                        fileName.style.display = 'none';
+                        cidInput.classList.remove('is-valid', 'is-invalid');
+                        document.getElementById('dataAtestado').value = today;
+                        this.classList.remove('was-validated');
+                        localStorage.setItem('atestadoUpdated', 'true');
+
+                        setTimeout(() => {
+                            window.location.href = '/funcionario.html';
+                        }, 2000);
+                    } else {
+                        const errorData = await response.json();
+                        showAlert('danger', `Erro ao enviar atestado: ${errorData.message || 'Tente novamente mais tarde.'}`);
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    showAlert('danger', 'Erro ao enviar atestado. Verifique sua conexão e tente novamente.');
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Enviar Atestado';
+                }
+            });
+        });
+
+        // Função para mostrar alertas
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+
+            const form = document.getElementById('atestadoForm');
+            form.parentNode.insertBefore(alertDiv, form);
+
+            // Rolar para o topo para mostrar o alerta
+            window.scrollTo(0, 0);
+
+            // Remover o alerta após 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // === Alternância de Alto Contraste (com Memória) ===
+        (function () {
+            const contrasteBtn = document.getElementById('contraste-toggle');
+            const body = document.body;
+            const storageKey = 'altoContrasteAtivo'; // Chave para salvar no localStorage
+
+            // 1. FUNÇÃO PARA APLICAR O ESTADO SALVO
+            // Esta função será chamada assim que a página carregar
+            function aplicarEstadoSalvo() {
+                // Pega o valor salvo (pode ser 'true' ou 'false' como string)
+                const estadoSalvo = localStorage.getItem(storageKey);
+
+                if (estadoSalvo === 'true') {
+                    body.classList.add('alto-contraste');
+                } else {
+                    body.classList.remove('alto-contraste');
+                }
+            }
+
+            // 2. FUNÇÃO PARA OUVIR O CLIQUE DO BOTÃO
+            // Esta função salva a escolha no localStorage
+            if (contrasteBtn) {
+                contrasteBtn.addEventListener('click', () => {
+                    // Alterna a classe no body
+                    body.classList.toggle('alto-contraste');
+
+                    // Salva a escolha atual no localStorage
+                    if (body.classList.contains('alto-contraste')) {
+                        localStorage.setItem(storageKey, 'true');
+                    } else {
+                        localStorage.setItem(storageKey, 'false');
+                    }
+                });
+            }
+
+            // 3. APLICA O ESTADO SALVO IMEDIATAMENTE
+            // Isso garante que a página já carregue com o modo correto,
+            // antes mesmo do usuário ver.
+            aplicarEstadoSalvo();
+
+        })(); // A (function() { ... })(); faz com que o código execute imediatamente
+    </script>
+</body>
+</html>
