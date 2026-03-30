@@ -171,17 +171,21 @@
         /* ==== Botão de Alto Contraste ==== */
         .btn-contraste {
             position: fixed;
-            top: 65px;
+            top: 50%;
             right: 20px;
-            z-index: 1056;
-            background-color: white;
-            color: var(--primary-color);
+            transform: translateY(-50%);
+            z-index: 9999;
+            background-color: var(--primary-color);
+            color: white;
             border: none;
-            border-radius: 30px;
-            padding: 10px 18px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.0rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -194,10 +198,10 @@
         /* ==== REGRA DE RESPONSIVIDADE PARA O BOTÃO ==== */
         @media (max-width: 575.98px) {
             .btn-contraste {
-                padding: 6px 12px;
-                font-size: 0.8rem;
+                background-color: white;
+                color: var(--primary-color);
+                font-size: 2.0rem;
                 right: 10px;
-                top: 190px;
             }
         }
 
@@ -346,7 +350,7 @@
 
 <body>
     <button id="contraste-toggle" class="btn-contraste" aria-label="Alternar alto contraste">
-        <i class="fas fa-adjust"></i> Acessibilidade
+        <i class="fas fa-adjust"></i>
     </button>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
