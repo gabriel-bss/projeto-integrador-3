@@ -55,31 +55,19 @@
             transition: all 0.3s ease;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(44, 125, 160, 0.25);
-        }
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(44, 125, 160, 0.25);
+            }
 
-        /* Estilos para validação em tempo real */
-        .form-control:invalid:not(:placeholder-shown) {
-            border-color: #dc3545;
-        }
+            /* Estilos para validação em tempo real */
+            .form-control:invalid:not(:placeholder-shown) {
+                border-color: #dc3545;
+            }
 
-        .form-control:valid:not(:placeholder-shown) {
-            border-color: #198754;
-        }
-
-        /* Fim estilos validação */
-
-        /* Estilos para validação em tempo real */
-        .form-control:invalid:not(:placeholder-shown) {
-            border-color: #dc3545;
-        }
-
-        .form-control:valid:not(:placeholder-shown) {
-            border-color: #198754;
-        }
-
+            .form-control:valid:not(:placeholder-shown) {
+                border-color: #198754;
+            }
         /* Fim estilos validação */
 
         .btn-primary {
@@ -102,20 +90,20 @@
             transition: all 0.3s ease;
         }
 
-        .btn-outline-secondary:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
+            .btn-outline-secondary:hover {
+                background-color: var(--primary-color);
+                color: white;
+            }
 
         .icon-container {
             text-align: center;
             margin-bottom: 1.5rem;
         }
 
-        .icon-container i {
-            font-size: 3rem;
-            color: var(--primary-color);
-        }
+            .icon-container i {
+                font-size: 3rem;
+                color: var(--primary-color);
+            }
 
         .required-field::after {
             content: "*";
@@ -143,9 +131,9 @@
             cursor: pointer;
         }
 
-        .file-upload-wrapper:hover {
-            border-color: var(--primary-color);
-        }
+            .file-upload-wrapper:hover {
+                border-color: var(--primary-color);
+            }
 
         .file-upload-icon {
             font-size: 2.5rem;
@@ -177,21 +165,17 @@
         /* ==== Botão de Alto Contraste ==== */
         .btn-contraste {
             position: fixed;
-            top: 50%;
+            bottom: 20px;
             right: 20px;
-            transform: translateY(-50%);
             z-index: 9999;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.0rem;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -201,12 +185,11 @@
             transform: translateY(-3px);
         }
 
-        /* ==== REGRA DE RESPONSIVIDADE DO BOTÃO ==== */
         @media (max-width: 575.98px) {
             .btn-contraste {
-                background-color: white;
-                color: var(--primary-color);
-                font-size: 2.0rem;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                bottom: 15px;
                 right: 10px;
             }
         }
@@ -517,6 +500,7 @@
             // Converter para maiúsculas enquanto digita
             cidInput.addEventListener('input', function () {
                 this.value = this.value.toUpperCase();
+               
                 if (this.validity.customError) {
                     this.setCustomValidity("");
                     this.classList.remove('is-invalid');
@@ -535,6 +519,7 @@
 
                 if (cidValue === "") {
                     cidFeedback.textContent = "Por favor, informe o CID.";
+                    
                     return;
                 }
 
@@ -543,7 +528,7 @@
                     this.setCustomValidity("Formato de CID inválido.");
                     cidFeedback.textContent = "Formato inválido. Use o padrão A00 ou A00.0";
                     this.classList.add('is-invalid');
-                    cidFeedback.style.display = 'block';
+                    cidFeedback.style.display = 'block'; 
                     return;
                 }
 
@@ -558,7 +543,7 @@
 
                     if (response.ok && data.valido) {
                         // VÁLIDO
-                        this.setCustomValidity("");
+                        this.setCustomValidity(""); 
                         this.classList.add('is-valid');
                         cidSuccessFeedback.textContent = "CID válido.";
                         cidSuccessFeedback.style.display = 'block';
@@ -573,10 +558,10 @@
                 } catch (error) {
                     console.error("Erro ao validar CID:", error);
                     // Erro de Rede
-                    this.setCustomValidity("Não foi possível validar o CID. Tente novamente.");
+                    this.setCustomValidity("Não foi possível validar o CID. Tente novamente."); 
                     cidFeedback.textContent = "Erro de conexão ao validar o CID. Verifique sua rede.";
                     this.classList.add('is-invalid');
-                    cidFeedback.style.display = 'block';
+                    cidFeedback.style.display = 'block'; 
                 } finally {
                     isCidValidating = false;
                     cidSpinner.style.display = 'none';
@@ -587,6 +572,7 @@
 
             // Lidar com o envio do formulário
             document.getElementById('atestadoForm').addEventListener('submit', async function (e) {
+                
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -595,7 +581,7 @@
                     cidInput.focus();
                     return;
                 }
-
+               
                 this.classList.add('was-validated');
 
                 // Verificação explícita do CID antes de checar o resto
@@ -603,8 +589,8 @@
                     // Se tem algo digitado mas é inválido (formato ou API falhou), foca nele
                     cidFeedback.style.display = 'block';
                     cidInput.focus();
-                    return;
-                }
+                    return; 
+                }             
                 if (cidInput.value === "") {
                     cidFeedback.textContent = "Por favor, informe o CID."; // Garante a msg correta
                     cidFeedback.style.display = 'block';
@@ -731,5 +717,4 @@
         })(); // A (function() { ... })(); faz com que o código execute imediatamente
     </script>
 </body>
-
 </html>

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Gh/oK8sirkg=",
+  "dgSpecHash": "j6K92A9jKuE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\guilh\\OneDrive\\Área de Trabalho\\Projeto-Integrador-PI2-main\\Projeto-Integrador-PI2-main\\AtestadoMedico.csproj",
+  "projectFilePath": "C:\\Users\\guilh\\OneDrive\\Área de Trabalho\\Projeto-Integrador-PI2-main\\AtestadoMedico.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\guilh\\.nuget\\packages\\azure.core\\1.47.3\\azure.core.1.47.3.nupkg.sha512",
     "C:\\Users\\guilh\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

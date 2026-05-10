@@ -35,7 +35,7 @@ namespace AtestadoMedico.Models
         public string? MotivoRejeicao { get; set; }
         
         // Campos de auditoria
-        public int? AtualizadoPor { get; set; }
+        public string? AtualizadoPor { get; set; }
         
         public DateTime? DataAtualizacao { get; set; }
         
@@ -61,7 +61,7 @@ namespace AtestadoMedico.Models
 
         // Relação com o usuário
         [ForeignKey("Usuario")]
-        public int UsuarioId { get; set; }
+        public string UsuarioId { get; set; } = string.Empty;
         public Usuario? Usuario { get; set; }
     }
 } 

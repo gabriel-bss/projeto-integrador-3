@@ -8,7 +8,7 @@ namespace AtestadoMedico.ViewModels
     {
         // Propriedades para retorno da API
         public int Id { get; set; }
-        public int UsuarioId { get; set; }
+        public string UsuarioId { get; set; } = string.Empty;
         public DateTime DataAtestado { get; set; }
         
         [Required]

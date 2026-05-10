@@ -1,6 +1,7 @@
-using AtestadoMedico.Data;
+﻿using AtestadoMedico.Data;
 using AtestadoMedico.Models;
 using AtestadoMedico.ViewModels;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Azure.Storage.Blobs;
@@ -44,6 +45,9 @@ namespace AtestadoMedico.Controllers
         // =================================================================
         // MÉTODO DE UPLOAD CORRIGIDO (USANDO AZURE BLOB STORAGE)
         // =================================================================
+        private static string NormalizeId(string id) =>
+            string.IsNullOrWhiteSpace(id) ? id : char.ToUpper(id[0]) + id.Substring(1);
+
         [HttpPost("upload")]
         public async Task<IActionResult> Upload([FromForm] AtestadoViewModel viewModel)
         {
@@ -52,6 +56,7 @@ namespace AtestadoMedico.Controllers
                 return BadRequest("Nenhuma imagem (arquivo) foi enviada.");
             }
 
+            viewModel.UsuarioId = NormalizeId(viewModel.UsuarioId);
             // Verificar se o usuário existe
             var usuario = await _context.Usuarios.FindAsync(viewModel.UsuarioId);
             if (usuario == null)
@@ -123,34 +128,35 @@ namespace AtestadoMedico.Controllers
 
         // GET: api/Atestado
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AtestadoViewModel>>> GetAtestados([FromQuery] int? usuarioId = null)
+        public async Task<ActionResult<IEnumerable<AtestadoViewModel>>> GetAtestados([FromQuery] string? usuarioId = null)
         {
             Console.WriteLine($"Recebida solicitação para obter atestados. UsuarioId: {usuarioId}");
-            
-            if (usuarioId.HasValue)
+
+            if (!string.IsNullOrEmpty(usuarioId))
             {
-                var usuario = await _context.Usuarios.FindAsync(usuarioId.Value);
+                usuarioId = NormalizeId(usuarioId);
+                var usuario = await _context.Usuarios.FindAsync(usuarioId);
                 if (usuario == null)
                 {
                     Console.WriteLine($"Usuário {usuarioId} não encontrado");
                     return NotFound("Usuário não encontrado");
                 }
-                
-                Console.WriteLine($"Usuário {usuario.Nome} (ID: {usuario.Id}) encontrado. É admin: {usuario.IsAdmin}");
-                
-                var atestadosQuery = usuario.IsAdmin 
-                    ? _context.Atestados 
-                    : _context.Atestados.Where(a => a.UsuarioId == usuarioId.Value);
-                
+
+                Console.WriteLine($"Usuário (ID: {usuario.Id}) encontrado. É admin: {usuario.IsAdmin}");
+
+                var atestadosQuery = usuario.IsAdmin
+                    ? _context.Atestados
+                    : _context.Atestados.Where(a => a.UsuarioId == usuarioId);
+
                 var realCount = await atestadosQuery.CountAsync();
                 Console.WriteLine($"Número real de atestados para {(usuario.IsAdmin ? "admin" : "usuário")}: {realCount}");
-                
+
                 var atestados = await atestadosQuery
                     .OrderByDescending(a => a.DataCadastro)
                     .ToListAsync();
-                
+
                 Console.WriteLine($"Retornando {atestados.Count} atestados");
-                
+
                 var atestadosViewModel = atestados.Select(a => new AtestadoViewModel
                 {
                     Id = a.Id,
@@ -168,7 +174,7 @@ namespace AtestadoMedico.Controllers
                     CID = a.CID,
                     DiasAfastamento = a.DiasAfastamento
                 }).ToList();
-                
+
                 return atestadosViewModel;
             }
             else
@@ -191,16 +197,17 @@ namespace AtestadoMedico.Controllers
             }
         }
 
-        // GET: api/Atestado/5?usuarioId=1
+        // GET: api/Atestado/5?usuarioId=Brasil001
         [HttpGet("{id}")]
-        public async Task<ActionResult<AtestadoViewModel>> GetAtestado(int id, [FromQuery] int usuarioId)
+        public async Task<ActionResult<AtestadoViewModel>> GetAtestado(int id, [FromQuery] string usuarioId)
         {
+            usuarioId = NormalizeId(usuarioId);
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
             {
                 return NotFound("Usuário não encontrado");
             }
-            
+
             var atestado = await _context.Atestados.FindAsync(id);
             if (atestado == null)
             {
@@ -212,8 +219,8 @@ namespace AtestadoMedico.Controllers
                 Console.WriteLine($"Acesso negado: Usuário {usuarioId} tentando acessar atestado {id} do usuário {atestado.UsuarioId}");
                 return Unauthorized("Você só pode visualizar seus próprios atestados");
             }
-            
-            Console.WriteLine($"Atestado {id} acessado por: {usuario.Nome} (ID: {usuarioId}, Admin: {usuario.IsAdmin})");
+
+            Console.WriteLine($"Atestado {id} acessado por ID: {usuarioId}, Admin: {usuario.IsAdmin}");
 
             var atestadoVM = new AtestadoViewModel
             {
@@ -236,27 +243,29 @@ namespace AtestadoMedico.Controllers
             return atestadoVM;
         }
 
-        // GET: api/Atestado/Usuario/5
+        // GET: api/Atestado/Usuario/Brasil001
         [HttpGet("Usuario/{usuarioId}")]
-        public async Task<ActionResult<IEnumerable<AtestadoViewModel>>> GetAtestadosByUsuario(int usuarioId, [FromQuery] int requestingUserId)
+        public async Task<ActionResult<IEnumerable<AtestadoViewModel>>> GetAtestadosByUsuario(string usuarioId, [FromQuery] string requestingUserId)
         {
+            usuarioId = NormalizeId(usuarioId);
+            requestingUserId = NormalizeId(requestingUserId);
             var requestingUser = await _context.Usuarios.FindAsync(requestingUserId);
             if (requestingUser == null)
             {
                 return NotFound("Usuário solicitante não encontrado");
             }
-            
+
             if (!requestingUser.IsAdmin && requestingUser.Id != usuarioId)
             {
                 Console.WriteLine($"Acesso negado: Usuário {requestingUserId} tentando acessar atestados do usuário {usuarioId}");
                 return Unauthorized("Você só pode visualizar seus próprios atestados");
             }
-            
+
             var atestados = await _context.Atestados
                 .Where(a => a.UsuarioId == usuarioId)
                 .OrderByDescending(a => a.DataCadastro)
                 .ToListAsync();
-            
+
             Console.WriteLine($"Retornando {atestados.Count} atestados para o usuário {usuarioId}, solicitado por {requestingUserId}");
 
             var atestadosVM = atestados.Select(a => new AtestadoViewModel
@@ -280,24 +289,25 @@ namespace AtestadoMedico.Controllers
             return atestadosVM;
         }
 
-        // GET: api/Atestado/MeusAtestados?usuarioId=5
+        // GET: api/Atestado/MeusAtestados?usuarioId=Brasil001
         [HttpGet("MeusAtestados")]
-        public async Task<ActionResult<IEnumerable<AtestadoViewModel>>> GetMeusAtestados([FromQuery] int usuarioId)
+        public async Task<ActionResult<IEnumerable<AtestadoViewModel>>> GetMeusAtestados([FromQuery] string usuarioId)
         {
+            usuarioId = NormalizeId(usuarioId);
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
             {
                 return NotFound("Usuário não encontrado");
             }
-            
-            Console.WriteLine($"Buscando atestados para o usuário: {usuario.Id}, {usuario.Nome}");
-            
+
+            Console.WriteLine($"Buscando atestados para o usuário: {usuario.Id}");
+
             var countExato = await _context.Atestados
                 .Where(a => a.UsuarioId == usuarioId)
                 .CountAsync();
-                
+
             Console.WriteLine($"Contagem real do banco para usuário {usuarioId}: {countExato}");
-            
+
             var atestados = await _context.Atestados
                 .Where(a => a.UsuarioId == usuarioId)
                 .OrderByDescending(a => a.DataCadastro)
@@ -330,22 +340,23 @@ namespace AtestadoMedico.Controllers
             return atestadosVM;
         }
 
-        // GET: api/Atestado/MeuAtestado/5?usuarioId=1
+        // GET: api/Atestado/MeuAtestado/5?usuarioId=Brasil001
         [HttpGet("MeuAtestado/{id}")]
-        public async Task<ActionResult<AtestadoViewModel>> GetMeuAtestado(int id, [FromQuery] int usuarioId)
+        public async Task<ActionResult<AtestadoViewModel>> GetMeuAtestado(int id, [FromQuery] string usuarioId)
         {
+            usuarioId = NormalizeId(usuarioId);
             var atestado = await _context.Atestados.FindAsync(id);
             if (atestado == null)
             {
                 return NotFound("Atestado não encontrado");
             }
-            
+
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
             {
                 return NotFound("Usuário não encontrado");
             }
-            
+
             if (!usuario.IsAdmin && atestado.UsuarioId != usuarioId)
             {
                 Console.WriteLine($"Tentativa de acesso não autorizado: usuário {usuarioId} tentando acessar atestado {id} do usuário {atestado.UsuarioId}");
@@ -378,16 +389,17 @@ namespace AtestadoMedico.Controllers
         // Se você está usando o Azure Blob, o download é feito de outra forma
         // (ou, mais fácil, o frontend apenas usa a URL do CaminhoArquivo para abrir o arquivo).
         [HttpGet("download/{id}")]
-        public async Task<IActionResult> Download(int id, [FromQuery] int usuarioId)
+        public async Task<IActionResult> Download(int id, [FromQuery] string usuarioId)
         {
+            usuarioId = NormalizeId(usuarioId);
             var atestado = await _context.Atestados.FindAsync(id);
             if (atestado == null)
                 return NotFound("Atestado não encontrado");
-            
+
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
                 return NotFound("Usuário não encontrado");
-                
+
             if (!usuario.IsAdmin && usuario.Id != atestado.UsuarioId)
             {
                 return Unauthorized("Você só pode baixar seus próprios atestados");
@@ -417,10 +429,11 @@ namespace AtestadoMedico.Controllers
             return NotFound("O método de download não está configurado para o armazenamento em nuvem ou o arquivo local não foi encontrado.");
         }
 
-        // DELETE: api/Atestado/5?usuarioId=1
+        // DELETE: api/Atestado/5?usuarioId=Brasil001
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAtestado(int id, [FromQuery] int usuarioId)
+        public async Task<IActionResult> DeleteAtestado(int id, [FromQuery] string usuarioId)
         {
+            usuarioId = NormalizeId(usuarioId);
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null || !usuario.IsAdmin)
             {
@@ -441,22 +454,23 @@ namespace AtestadoMedico.Controllers
             return Ok(new { message = "Atestado excluído com sucesso" });
         }
 
-        // DELETE: api/Atestado/ExcluirMeuAtestado/5?usuarioId=1
+        // DELETE: api/Atestado/ExcluirMeuAtestado/5?usuarioId=Brasil001
         [HttpDelete("ExcluirMeuAtestado/{id}")]
-        public async Task<IActionResult> ExcluirMeuAtestado(int id, [FromQuery] int usuarioId)
+        public async Task<IActionResult> ExcluirMeuAtestado(int id, [FromQuery] string usuarioId)
         {
+            usuarioId = NormalizeId(usuarioId);
             var atestado = await _context.Atestados.FindAsync(id);
             if (atestado == null)
             {
                 return NotFound("Atestado não encontrado");
             }
-            
+
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
             {
                 return NotFound("Usuário não encontrado");
             }
-            
+
             if (atestado.UsuarioId != usuarioId)
             {
                 return Unauthorized("Você só pode excluir seus próprios atestados");
@@ -472,8 +486,9 @@ namespace AtestadoMedico.Controllers
 
         // GET: api/Atestado/ContarAtestados?usuarioId=1
         [HttpGet("ContarAtestados")]
-        public async Task<ActionResult<object>> ContarAtestados([FromQuery] int usuarioId)
-        {            
+        public async Task<ActionResult<object>> ContarAtestados([FromQuery] string usuarioId)
+        {
+            usuarioId = NormalizeId(usuarioId);            
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
             {
@@ -558,10 +573,11 @@ namespace AtestadoMedico.Controllers
 
         // GET: api/Atestado/Total
         [HttpGet("Total")]
-        public async Task<ActionResult<object>> GetTotalAtestados([FromQuery] int usuarioId = 0)
+        public async Task<ActionResult<object>> GetTotalAtestados([FromQuery] string? usuarioId = null)
         {
-            if (usuarioId > 0)
+            if (!string.IsNullOrEmpty(usuarioId))
             {
+                usuarioId = NormalizeId(usuarioId!);
                 var usuario = await _context.Usuarios.FindAsync(usuarioId);
                 if (usuario == null)
                 {
@@ -569,8 +585,7 @@ namespace AtestadoMedico.Controllers
                 }
                 
                 var countExato = await _context.Atestados
-                    .Where(a => a.UsuarioId == usuarioId)
-                    .CountAsync();
+                    .Where(a => a.UsuarioId == usuarioId).CountAsync();
                 
                 return Ok(new { 
                     totalAtestados = countExato,
@@ -592,8 +607,9 @@ namespace AtestadoMedico.Controllers
         
         // GET: api/Atestado/DashboardInfo?usuarioId=1
         [HttpGet("DashboardInfo")]
-        public async Task<ActionResult<object>> GetDashboardInfo([FromQuery] int usuarioId)
+        public async Task<ActionResult<object>> GetDashboardInfo([FromQuery] string usuarioId)
         {
+            usuarioId = NormalizeId(usuarioId);
             var usuario = await _context.Usuarios.FindAsync(usuarioId);
             if (usuario == null)
             {
@@ -636,10 +652,12 @@ namespace AtestadoMedico.Controllers
         [HttpPut("status/{id}")]
         public async Task<IActionResult> AtualizarStatus(int id, [FromBody] AtualizarStatusViewModel model)
         {
-            if (model == null || model.UsuarioId <= 0)
+            if (model == null || string.IsNullOrEmpty(model.UsuarioId))
             {
                 return BadRequest("Dados inválidos para atualização de status");
             }
+
+            model.UsuarioId = NormalizeId(model.UsuarioId);
 
             var usuario = await _context.Usuarios.FindAsync(model.UsuarioId);
             if (usuario == null)
@@ -730,6 +748,160 @@ namespace AtestadoMedico.Controllers
             {
                 Console.WriteLine($"Erro ao corrigir status dos atestados: {ex.Message}");
                 return StatusCode(500, $"Erro ao corrigir status: {ex.Message}");
+            }
+        }
+
+        // GET: api/Atestado/ModeloPlanilha
+        [HttpGet("ModeloPlanilha")]
+        public IActionResult ModeloPlanilha()
+        {
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Atestados");
+
+            var headers = new[] { "UsuarioId", "DataAtestado", "NomeMedico", "CRM", "CID", "DiasAfastamento", "Descricao", "Status" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                var cell = ws.Cell(1, i + 1);
+                cell.Value = headers[i];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#2c7da0");
+                cell.Style.Font.FontColor = XLColor.White;
+            }
+
+            ws.Cell(2, 1).Value = 1;
+            ws.Cell(2, 2).Value = DateTime.Today.ToString("yyyy-MM-dd");
+            ws.Cell(2, 3).Value = "Dr. João Silva";
+            ws.Cell(2, 4).Value = "CRM12345";
+            ws.Cell(2, 5).Value = "A09";
+            ws.Cell(2, 6).Value = 3;
+            ws.Cell(2, 7).Value = "Diagnóstico opcional";
+            ws.Cell(2, 8).Value = "Aprovado";
+
+            ws.Cell(3, 1).Value = "INSTRUÇÕES: Status deve ser 'Aprovado' ou 'Rejeitado'. Todos os campos são obrigatórios exceto Descricao.";
+            ws.Cell(3, 1).Style.Font.Italic = true;
+            ws.Cell(3, 1).Style.Font.FontColor = XLColor.DarkRed;
+            ws.Range(3, 1, 3, 8).Merge();
+
+            ws.Columns().AdjustToContents();
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            stream.Position = 0;
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "modelo_atestados.xlsx");
+        }
+
+        // POST: api/Atestado/ImportarPlanilha?adminId=1
+        [HttpPost("ImportarPlanilha")]
+        public async Task<IActionResult> ImportarPlanilha([FromQuery] string adminId, IFormFile arquivo)
+        {
+            adminId = NormalizeId(adminId);
+            var admin = await _context.Usuarios.FindAsync(adminId);
+            if (admin == null || !admin.IsAdmin)
+                return Unauthorized("Apenas administradores podem importar atestados.");
+
+            if (arquivo == null || arquivo.Length == 0)
+                return BadRequest("Nenhum arquivo enviado.");
+
+            if (Path.GetExtension(arquivo.FileName).ToLower() != ".xlsx")
+                return BadRequest("Apenas arquivos .xlsx são aceitos.");
+
+            var importados = new List<string>();
+            var erros = new List<string>();
+
+            try
+            {
+                using var stream = new MemoryStream();
+                await arquivo.CopyToAsync(stream);
+                stream.Position = 0;
+
+                using var workbook = new XLWorkbook(stream);
+                var ws = workbook.Worksheets.First();
+
+                var expectedHeaders = new[] { "UsuarioId", "DataAtestado", "NomeMedico", "CRM", "CID", "DiasAfastamento", "Descricao", "Status" };
+                for (int c = 1; c <= expectedHeaders.Length; c++)
+                {
+                    if (!ws.Cell(1, c).GetString().Trim().Equals(expectedHeaders[c - 1], StringComparison.OrdinalIgnoreCase))
+                        return BadRequest($"Cabeçalho inválido na coluna {c}. Esperado: '{expectedHeaders[c - 1]}'. Use a planilha modelo.");
+                }
+
+                int lastRow = ws.LastRowUsed()?.RowNumber() ?? 1;
+                for (int row = 2; row <= lastRow; row++)
+                {
+                    string Get(int col) => ws.Row(row).Cell(col).GetString().Trim();
+
+                    var usuarioIdStr = Get(1);
+                    if (string.IsNullOrWhiteSpace(usuarioIdStr)) continue;
+
+                    var usuarioId = NormalizeId(usuarioIdStr);
+                    var dataStr    = Get(2);
+                    var nomeMedico = Get(3);
+                    var crm        = Get(4);
+                    var cid        = Get(5);
+                    var diasStr    = Get(6);
+                    var descricao  = Get(7);
+                    var status     = Get(8);
+
+                    if (string.IsNullOrWhiteSpace(nomeMedico) || string.IsNullOrWhiteSpace(crm) ||
+                        string.IsNullOrWhiteSpace(cid) || string.IsNullOrWhiteSpace(diasStr) || string.IsNullOrWhiteSpace(status))
+                    {
+                        erros.Add($"Linha {row} (UsuarioId={usuarioId}): campos obrigatórios ausentes (NomeMedico, CRM, CID, DiasAfastamento, Status).");
+                        continue;
+                    }
+
+                    if (status != "Aprovado" && status != "Rejeitado")
+                    {
+                        erros.Add($"Linha {row} (UsuarioId={usuarioId}): Status '{status}' inválido. Use 'Aprovado' ou 'Rejeitado'.");
+                        continue;
+                    }
+
+                    if (!DateTime.TryParse(dataStr, out var dataAtestado))
+                    {
+                        erros.Add($"Linha {row} (UsuarioId={usuarioId}): DataAtestado '{dataStr}' inválida. Use formato AAAA-MM-DD.");
+                        continue;
+                    }
+
+                    var usuario = await _context.Usuarios.FindAsync(usuarioId);
+                    if (usuario == null)
+                    {
+                        erros.Add($"Linha {row}: UsuarioId '{usuarioId}' não encontrado no sistema.");
+                        continue;
+                    }
+
+                    if (!int.TryParse(diasStr, out var diasAfastamento))
+                    {
+                        erros.Add($"Linha {row} (UsuarioId={usuarioId}): DiasAfastamento '{diasStr}' deve ser um número inteiro.");
+                        continue;
+                    }
+
+                    var atestado = new Atestado
+                    {
+                        UsuarioId      = usuarioId,
+                        DataAtestado   = dataAtestado,
+                        NomeMedico     = nomeMedico,
+                        CRM            = crm,
+                        CID            = cid,
+                        DiasAfastamento = diasAfastamento,
+                        Descricao      = string.IsNullOrWhiteSpace(descricao) ? null : descricao,
+                        NomeArquivo    = "importado-via-planilha",
+                        CaminhoArquivo = "sem-arquivo",
+                        TipoArquivo    = "application/octet-stream",
+                        DataCadastro   = DateTime.UtcNow,
+                        Status         = status
+                    };
+
+                    _context.Atestados.Add(atestado);
+                    importados.Add($"Linha {row}: atestado de UsuarioId={usuarioId} ({nomeMedico}) importado.");
+                }
+
+                if (importados.Count > 0)
+                    await _context.SaveChangesAsync();
+
+                var message = $"Importação concluída: {importados.Count} atestado(s) importado(s), {erros.Count} erro(s).";
+                return Ok(new { message, importados, erros });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao processar planilha: {ex.Message}");
             }
         }
 

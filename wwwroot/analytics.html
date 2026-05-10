@@ -39,11 +39,7 @@
             opacity: 0.85;
             transition: opacity 0.2s;
         }
-
-        .back-link:hover {
-            opacity: 1;
-            color: white;
-        }
+        .back-link:hover { opacity: 1; color: white; }
 
         .kpi-card {
             background: white;
@@ -54,12 +50,7 @@
             transition: transform 0.2s, box-shadow 0.2s;
             height: 100%;
         }
-
-        .kpi-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-        }
-
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
         .kpi-value {
             font-size: 1.9rem;
             font-weight: 700;
@@ -67,7 +58,6 @@
             font-family: 'Poppins', sans-serif;
             line-height: 1.1;
         }
-
         .kpi-label {
             font-size: 0.78rem;
             color: #666;
@@ -75,12 +65,7 @@
             letter-spacing: 0.5px;
             margin-bottom: 0.4rem;
         }
-
-        .kpi-sub {
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 0.25rem;
-        }
+        .kpi-sub { font-size: 0.8rem; color: #888; margin-top: 0.25rem; }
 
         .chart-card {
             background: white;
@@ -89,7 +74,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
             height: 100%;
         }
-
         .chart-title {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
@@ -97,16 +81,8 @@
             font-size: 0.95rem;
             margin-bottom: 1rem;
         }
-
-        .chart-container {
-            position: relative;
-            height: 280px;
-        }
-
-        .chart-container-sm {
-            position: relative;
-            height: 240px;
-        }
+        .chart-container { position: relative; height: 280px; }
+        .chart-container-sm { position: relative; height: 240px; }
 
         .filter-section {
             background: white;
@@ -125,7 +101,7 @@
         }
 
         .insight-box {
-            background: linear-gradient(135deg, rgba(44, 125, 160, 0.08), rgba(70, 143, 175, 0.04));
+            background: linear-gradient(135deg, rgba(44,125,160,0.08), rgba(70,143,175,0.04));
             border-left: 3px solid var(--primary-color);
             border-radius: 0 6px 6px 0;
             padding: 0.6rem 0.9rem;
@@ -135,15 +111,8 @@
             line-height: 1.5;
         }
 
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
+        .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
+        .btn-primary:hover { background-color: var(--secondary-color); border-color: var(--secondary-color); }
 
         .footer {
             margin-top: auto;
@@ -155,79 +124,47 @@
         .loading-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.45);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.45);
             z-index: 9998;
             justify-content: center;
             align-items: center;
         }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
+        .loading-overlay.active { display: flex; }
         .loading-spinner {
             background: white;
             border-radius: 12px;
             padding: 2rem 2.5rem;
             text-align: center;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
 
         /* Alto Contraste button */
         .btn-contraste {
             position: fixed;
-            top: 50%;
+            bottom: 20px;
             right: 20px;
-            transform: translateY(-50%);
             z-index: 9999;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 2.0rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border-radius: 30px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        .btn-contraste:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-50%) scale(1.1);
-        }
-
+        .btn-contraste:hover { background-color: var(--secondary-color); transform: translateY(-3px); }
         @media (max-width: 575.98px) {
-            .btn-contraste {
-                width: 42px;
-                height: 42px;
-                font-size: 1.6rem;
-                right: 10px;
-            }
+            .btn-contraste { padding: 6px 12px; font-size: 0.8rem; bottom: 15px; right: 10px; }
         }
 
         /* ===== DARK MODE ===== */
-        body.alto-contraste {
-            background-color: #000 !important;
-            color: #fff !important;
-        }
-
-        body.alto-contraste .header {
-            background: #1b1b1b !important;
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        body.alto-contraste .footer {
-            background-color: #1b1b1b !important;
-            color: #aaa;
-        }
+        body.alto-contraste { background-color: #000 !important; color: #fff !important; }
+        body.alto-contraste .header { background: #1b1b1b !important; border-bottom: 2px solid var(--primary-color); }
+        body.alto-contraste .footer { background-color: #1b1b1b !important; color: #aaa; }
 
         body.alto-contraste .kpi-card,
         body.alto-contraste .chart-card,
@@ -236,21 +173,12 @@
         body.alto-contraste .loading-spinner {
             background-color: #1b1b1b !important;
             border-color: #333;
-            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.04) !important;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.04) !important;
         }
 
-        body.alto-contraste .kpi-label {
-            color: #aaa !important;
-        }
-
-        body.alto-contraste .kpi-sub {
-            color: #888 !important;
-        }
-
-        body.alto-contraste .chart-title {
-            color: #fff !important;
-        }
-
+        body.alto-contraste .kpi-label { color: #aaa !important; }
+        body.alto-contraste .kpi-sub { color: #888 !important; }
+        body.alto-contraste .chart-title { color: #fff !important; }
         body.alto-contraste .insight-box {
             background: #222 !important;
             border-color: var(--primary-color);
@@ -263,74 +191,41 @@
             color: #fff !important;
             border-color: #444 !important;
         }
-
-        body.alto-contraste .form-label {
-            color: #ddd !important;
-        }
+        body.alto-contraste .form-label { color: #ddd !important; }
 
         body.alto-contraste .btn-primary {
             background-color: #fff !important;
             color: #000 !important;
             border-color: #fff !important;
         }
-
         body.alto-contraste .btn-outline-secondary {
             color: #fff !important;
             border-color: #555 !important;
         }
-
-        body.alto-contraste .btn-outline-secondary:hover {
-            background-color: #333 !important;
-        }
+        body.alto-contraste .btn-outline-secondary:hover { background-color: #333 !important; }
 
         body.alto-contraste .btn-danger {
             background-color: #c0392b !important;
             border-color: #c0392b !important;
             color: #fff !important;
         }
-
         body.alto-contraste .btn-success {
             background-color: #1e8449 !important;
             border-color: #1e8449 !important;
             color: #fff !important;
         }
 
-        body.alto-contraste .text-muted {
-            color: #888 !important;
-        }
+        body.alto-contraste .text-muted { color: #888 !important; }
+        body.alto-contraste .breadcrumb-item a { color: var(--primary-color) !important; }
+        body.alto-contraste .breadcrumb-item.active { color: #fff !important; }
+        body.alto-contraste .breadcrumb-item + .breadcrumb-item::before { color: #666; }
 
-        body.alto-contraste .breadcrumb-item a {
-            color: var(--primary-color) !important;
-        }
+        body.alto-contraste .dropdown-menu { background-color: #222 !important; border-color: #444; }
+        body.alto-contraste .dropdown-item { color: #fff !important; }
+        body.alto-contraste .dropdown-item:hover { background-color: var(--primary-color) !important; }
+        body.alto-contraste .dropdown-divider { border-color: #444; }
 
-        body.alto-contraste .breadcrumb-item.active {
-            color: #fff !important;
-        }
-
-        body.alto-contraste .breadcrumb-item+.breadcrumb-item::before {
-            color: #666;
-        }
-
-        body.alto-contraste .dropdown-menu {
-            background-color: #222 !important;
-            border-color: #444;
-        }
-
-        body.alto-contraste .dropdown-item {
-            color: #fff !important;
-        }
-
-        body.alto-contraste .dropdown-item:hover {
-            background-color: var(--primary-color) !important;
-        }
-
-        body.alto-contraste .dropdown-divider {
-            border-color: #444;
-        }
-
-        body.alto-contraste .empty-state {
-            color: #888 !important;
-        }
+        body.alto-contraste .empty-state { color: #888 !important; }
 
         /* Empty state */
         .empty-state {
@@ -339,22 +234,11 @@
             color: #aaa;
             font-size: 0.9rem;
         }
-
-        .empty-state i {
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
-            display: block;
-        }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
 
         @media (max-width: 767.98px) {
-            .kpi-value {
-                font-size: 1.5rem;
-            }
-
-            .chart-container,
-            .chart-container-sm {
-                height: 220px;
-            }
+            .kpi-value { font-size: 1.5rem; }
+            .chart-container, .chart-container-sm { height: 220px; }
         }
     </style>
 </head>
@@ -371,7 +255,7 @@
 
     <!-- Accessibility Button -->
     <button id="contraste-toggle" class="btn-contraste" aria-label="Alternar alto contraste">
-        <i class="fas fa-adjust"></i>
+        <i class="fas fa-adjust"></i> Acessibilidade
     </button>
 
     <!-- Header -->
@@ -399,9 +283,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/admin.html"><i class="fas fa-tachometer-alt me-2"></i>Painel Admin</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><button class="dropdown-item text-danger" id="btnLogout"><i class="fas fa-sign-out-alt me-2"></i>Sair</button></li>
                         </ul>
                     </div>
@@ -613,11 +495,11 @@
         // ============================================================
         // CONSTANTES
         // ============================================================
-        const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-        const DIAS_SEMANA = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+        const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        const DIAS_SEMANA = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
         const PALETTE = [
-            '#2c7da0', '#468faf', '#2a9d8f', '#e9c46a', '#f4a261',
-            '#e76f51', '#264653', '#6d6875', '#b5838d', '#457b9d'
+            '#2c7da0','#468faf','#2a9d8f','#e9c46a','#f4a261',
+            '#e76f51','#264653','#6d6875','#b5838d','#457b9d'
         ];
 
         // ============================================================
@@ -651,8 +533,8 @@
         // ============================================================
         document.addEventListener('DOMContentLoaded', async function () {
             const usuarioId = localStorage.getItem('usuarioId');
-            const isAdmin = localStorage.getItem('usuarioIsAdmin');
-            const nome = localStorage.getItem('usuarioNome');
+            const isAdmin  = localStorage.getItem('usuarioIsAdmin');
+            const nome     = localStorage.getItem('usuarioNome');
 
             if (!usuarioId || isAdmin !== 'true') {
                 window.location.href = '/login.html';
@@ -704,7 +586,7 @@
         function popularFiltroAnos() {
             const anoAtual = new Date().getFullYear();
             const selectInicio = document.getElementById('filtroAnoInicio');
-            const selectFim = document.getElementById('filtroAnoFim');
+            const selectFim    = document.getElementById('filtroAnoFim');
 
             [selectInicio, selectFim].forEach(sel => {
                 sel.innerHTML = '<option value="">Todos</option>';
@@ -718,14 +600,14 @@
 
         function aplicarFiltros() {
             const anoInicio = parseInt(document.getElementById('filtroAnoInicio').value) || null;
-            const anoFim = parseInt(document.getElementById('filtroAnoFim').value) || null;
-            const status = document.getElementById('filtroStatus').value;
+            const anoFim    = parseInt(document.getElementById('filtroAnoFim').value)    || null;
+            const status    = document.getElementById('filtroStatus').value;
 
             atestadosFiltrados = todosAtestados.filter(a => {
                 const ano = new Date(a.dataAtestado || a.dataCadastro).getFullYear();
                 if (anoInicio && ano < anoInicio) return false;
-                if (anoFim && ano > anoFim) return false;
-                if (status && a.status !== status) return false;
+                if (anoFim    && ano > anoFim)    return false;
+                if (status    && a.status !== status) return false;
                 return true;
             });
 
@@ -734,8 +616,8 @@
 
         function limparFiltros() {
             document.getElementById('filtroAnoInicio').value = '';
-            document.getElementById('filtroAnoFim').value = '';
-            document.getElementById('filtroStatus').value = '';
+            document.getElementById('filtroAnoFim').value    = '';
+            document.getElementById('filtroStatus').value    = '';
             atestadosFiltrados = [...todosAtestados];
             renderizarTudo();
         }
@@ -795,7 +677,7 @@
             }
 
             // Dia mais crítico
-            const diaCount = [0, 0, 0, 0, 0, 0, 0];
+            const diaCount = [0,0,0,0,0,0,0];
             atestadosFiltrados.forEach(a => {
                 const d = new Date(a.dataAtestado || a.dataCadastro).getDay();
                 diaCount[d]++;
@@ -817,13 +699,13 @@
             const byMes = {};
             atestadosFiltrados.forEach(a => {
                 const d = new Date(a.dataAtestado || a.dataCadastro);
-                const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
                 byMes[key] = (byMes[key] || 0) + 1;
             });
 
-            const keys = Object.keys(byMes).sort();
-            const labels = keys.map(k => { const [y, m] = k.split('-'); return `${MESES[+m - 1]}/${y}`; });
-            const data = keys.map(k => byMes[k]);
+            const keys   = Object.keys(byMes).sort();
+            const labels = keys.map(k => { const [y,m]=k.split('-'); return `${MESES[+m-1]}/${y}`; });
+            const data   = keys.map(k => byMes[k]);
 
             // Insight
             document.getElementById('badgeMensal').textContent = `${atestadosFiltrados.length} atestado(s)`;
@@ -831,10 +713,10 @@
             if (data.length >= 2) {
                 const maxIdx = data.indexOf(Math.max(...data));
                 const minIdx = data.indexOf(Math.min(...data));
-                const media = (data.reduce((s, v) => s + v, 0) / data.length).toFixed(1);
+                const media  = (data.reduce((s,v)=>s+v,0)/data.length).toFixed(1);
                 insight = `Pico em ${labels[maxIdx]} (${data[maxIdx]} atestados). `
-                    + `Menor incidência em ${labels[minIdx]} (${data[minIdx]}). `
-                    + `Média mensal: ${media}.`;
+                        + `Menor incidência em ${labels[minIdx]} (${data[minIdx]}). `
+                        + `Média mensal: ${media}.`;
             } else if (data.length === 1) {
                 insight = `Apenas um mês com dados: ${labels[0]} (${data[0]} atestado(s)).`;
             }
@@ -860,8 +742,8 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { color: c.grade }, ticks: { color: c.texto, maxRotation: 45, font: { size: 11 } } },
-                        y: { beginAtZero: true, grid: { color: c.grade }, ticks: { color: c.texto, stepSize: 1, font: { size: 11 } } }
+                        x: { grid: { color: c.grade }, ticks: { color: c.texto, maxRotation: 45, font:{size:11} } },
+                        y: { beginAtZero:true, grid: { color: c.grade }, ticks: { color: c.texto, stepSize:1, font:{size:11} } }
                     }
                 }
             });
@@ -871,8 +753,8 @@
         // CHART: Status (Doughnut)
         // ============================================================
         function renderizarChartStatus() {
-            const counts = { Pendente: 0, Aprovado: 0, Rejeitado: 0 };
-            atestadosFiltrados.forEach(a => { counts[a.status] = (counts[a.status] || 0) + 1; });
+            const counts = { Pendente:0, Aprovado:0, Rejeitado:0 };
+            atestadosFiltrados.forEach(a => { counts[a.status] = (counts[a.status]||0)+1; });
             const total = atestadosFiltrados.length || 1;
 
             const c = cores();
@@ -880,10 +762,10 @@
             charts.status = new Chart(document.getElementById('chartStatus'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Pendente', 'Aprovado', 'Rejeitado'],
+                    labels: ['Pendente','Aprovado','Rejeitado'],
                     datasets: [{
                         data: [counts.Pendente, counts.Aprovado, counts.Rejeitado],
-                        backgroundColor: ['#e9c46a', '#2a9d8f', '#e76f51'],
+                        backgroundColor: ['#e9c46a','#2a9d8f','#e76f51'],
                         borderColor: c.fundo,
                         borderWidth: 3
                     }]
@@ -893,12 +775,10 @@
                     maintainAspectRatio: false,
                     cutout: '62%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { color: c.texto, padding: 14, font: { size: 12 } } },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => ` ${ctx.label}: ${ctx.parsed} (${((ctx.parsed / total) * 100).toFixed(1)}%)`
-                            }
-                        }
+                        legend: { position:'bottom', labels:{ color:c.texto, padding:14, font:{size:12} } },
+                        tooltip: { callbacks: {
+                            label: ctx => ` ${ctx.label}: ${ctx.parsed} (${((ctx.parsed/total)*100).toFixed(1)}%)`
+                        }}
                     }
                 }
             });
@@ -909,9 +789,9 @@
         // ============================================================
         function renderizarChartCID() {
             const cidCount = {};
-            atestadosFiltrados.forEach(a => { if (a.cid) cidCount[a.cid] = (cidCount[a.cid] || 0) + 1; });
+            atestadosFiltrados.forEach(a => { if (a.cid) cidCount[a.cid] = (cidCount[a.cid]||0)+1; });
 
-            const entries = Object.entries(cidCount).sort((a, b) => b[1] - a[1]).slice(0, 10);
+            const entries = Object.entries(cidCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
             const c = cores();
 
             let insight;
@@ -919,10 +799,10 @@
                 insight = 'Sem dados de CID disponíveis. Novos atestados enviados pelo formulário já terão o CID registrado.';
             } else {
                 const top = entries[0];
-                const somaTop10 = entries.reduce((s, e) => s + e[1], 0);
-                const pct = ((top[1] / somaTop10) * 100).toFixed(0);
+                const somaTop10 = entries.reduce((s,e)=>s+e[1],0);
+                const pct = ((top[1]/somaTop10)*100).toFixed(0);
                 insight = `"${top[0]}" representa ${pct}% dos registros com CID (${top[1]} ocorrência(s)). `
-                    + (entries.length > 1 ? `Segundo lugar: "${entries[1][0]}" (${entries[1][1]}).` : '');
+                        + (entries.length > 1 ? `Segundo lugar: "${entries[1][0]}" (${entries[1][1]}).` : '');
             }
             document.getElementById('insightCIDTexto').textContent = insight;
 
@@ -930,12 +810,12 @@
 
             if (entries.length === 0) {
                 charts.cid = new Chart(document.getElementById('chartCID'), {
-                    type: 'bar', data: { labels: [], datasets: [] },
+                    type: 'bar', data: { labels:[], datasets:[] },
                     options: {
-                        responsive: true, maintainAspectRatio: false,
+                        responsive:true, maintainAspectRatio:false,
                         plugins: {
-                            title: { display: true, text: 'Sem dados de CID ainda', color: c.texto, font: { size: 13 } },
-                            legend: { display: false }
+                            title: { display:true, text:'Sem dados de CID ainda', color:c.texto, font:{size:13} },
+                            legend: { display:false }
                         }
                     }
                 });
@@ -945,12 +825,12 @@
             charts.cid = new Chart(document.getElementById('chartCID'), {
                 type: 'bar',
                 data: {
-                    labels: entries.map(e => e[0]),
+                    labels: entries.map(e=>e[0]),
                     datasets: [{
                         label: 'Ocorrências',
-                        data: entries.map(e => e[1]),
-                        backgroundColor: PALETTE.slice(0, entries.length).map(p => p + 'cc'),
-                        borderColor: PALETTE.slice(0, entries.length),
+                        data: entries.map(e=>e[1]),
+                        backgroundColor: PALETTE.slice(0,entries.length).map(p=>p+'cc'),
+                        borderColor:     PALETTE.slice(0,entries.length),
                         borderWidth: 1,
                         borderRadius: 4
                     }]
@@ -959,10 +839,10 @@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend:{ display:false } },
                     scales: {
-                        x: { beginAtZero: true, grid: { color: c.grade }, ticks: { color: c.texto, stepSize: 1, font: { size: 11 } } },
-                        y: { grid: { display: false }, ticks: { color: c.texto, font: { size: 11 } } }
+                        x: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, stepSize:1, font:{size:11} } },
+                        y: { grid:{ display:false }, ticks:{ color:c.texto, font:{size:11} } }
                     }
                 }
             });
@@ -972,25 +852,25 @@
         // CHART: Dia da Semana
         // ============================================================
         function renderizarChartDiaSemana() {
-            const counts = [0, 0, 0, 0, 0, 0, 0];
-            atestadosFiltrados.forEach(a => { counts[new Date(a.dataAtestado || a.dataCadastro).getDay()]++; });
+            const counts = [0,0,0,0,0,0,0];
+            atestadosFiltrados.forEach(a => { counts[new Date(a.dataAtestado||a.dataCadastro).getDay()]++; });
 
             const maxVal = Math.max(...counts);
             const c = cores();
-            const bgColors = counts.map(v => v === maxVal ? '#e76f51cc' : PALETTE[0] + 'cc');
-            const borderColors = counts.map(v => v === maxVal ? '#e76f51' : PALETTE[0]);
+            const bgColors     = counts.map(v => v===maxVal ? '#e76f51cc' : PALETTE[0]+'cc');
+            const borderColors = counts.map(v => v===maxVal ? '#e76f51'   : PALETTE[0]);
 
             // Insight
-            const totalUteis = counts.slice(1, 6).reduce((s, v) => s + v, 0);
-            const totalFds = counts[0] + counts[6];
-            const total = atestadosFiltrados.length;
-            const maxIdx = counts.indexOf(maxVal);
+            const totalUteis = counts.slice(1,6).reduce((s,v)=>s+v,0);
+            const totalFds   = counts[0]+counts[6];
+            const total      = atestadosFiltrados.length;
+            const maxIdx     = counts.indexOf(maxVal);
 
             let insight = 'Nenhum dado disponível.';
             if (total > 0) {
                 insight = `${DIAS_SEMANA[maxIdx]} tem mais afastamentos (${maxVal}). `
-                    + `Dias úteis: ${totalUteis} (${total > 0 ? ((totalUteis / total) * 100).toFixed(0) : 0}%) | `
-                    + `Fins de semana: ${totalFds}.`;
+                        + `Dias úteis: ${totalUteis} (${total > 0 ? ((totalUteis/total)*100).toFixed(0) : 0}%) | `
+                        + `Fins de semana: ${totalFds}.`;
             }
             document.getElementById('insightDiaTexto').textContent = insight;
 
@@ -1011,10 +891,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend:{ display:false } },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: c.texto, font: { size: 11 } } },
-                        y: { beginAtZero: true, grid: { color: c.grade }, ticks: { color: c.texto, stepSize: 1, font: { size: 11 } } }
+                        x: { grid:{ display:false }, ticks:{ color:c.texto, font:{size:11} } },
+                        y: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, stepSize:1, font:{size:11} } }
                     }
                 }
             });
@@ -1027,27 +907,27 @@
             const comDias = atestadosFiltrados.filter(a => a.diasAfastamento > 0);
             const byMes = {};
             comDias.forEach(a => {
-                const d = new Date(a.dataAtestado || a.dataCadastro);
-                const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                const d = new Date(a.dataAtestado||a.dataCadastro);
+                const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
                 if (!byMes[key]) byMes[key] = [];
                 byMes[key].push(a.diasAfastamento);
             });
 
-            const keys = Object.keys(byMes).sort();
-            const labels = keys.map(k => { const [y, m] = k.split('-'); return `${MESES[+m - 1]}/${y}`; });
-            const data = keys.map(k => parseFloat((byMes[k].reduce((s, v) => s + v, 0) / byMes[k].length).toFixed(1)));
+            const keys   = Object.keys(byMes).sort();
+            const labels = keys.map(k => { const [y,m]=k.split('-'); return `${MESES[+m-1]}/${y}`; });
+            const data   = keys.map(k => parseFloat((byMes[k].reduce((s,v)=>s+v,0)/byMes[k].length).toFixed(1)));
             const c = cores();
 
             if (charts.mediaAfastamento) charts.mediaAfastamento.destroy();
 
             if (data.length === 0) {
                 charts.mediaAfastamento = new Chart(document.getElementById('chartMediaAfastamento'), {
-                    type: 'bar', data: { labels: [], datasets: [] },
+                    type: 'bar', data: { labels:[], datasets:[] },
                     options: {
-                        responsive: true, maintainAspectRatio: false,
+                        responsive:true, maintainAspectRatio:false,
                         plugins: {
-                            title: { display: true, text: 'Sem dados de afastamento ainda', color: c.texto, font: { size: 13 } },
-                            legend: { display: false }
+                            title: { display:true, text:'Sem dados de afastamento ainda', color:c.texto, font:{size:13} },
+                            legend:{ display:false }
                         }
                     }
                 });
@@ -1074,12 +954,12 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false },
+                        legend: { display:false },
                         tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} dias (média)` } }
                     },
                     scales: {
-                        x: { grid: { color: c.grade }, ticks: { color: c.texto, maxRotation: 45, font: { size: 11 } } },
-                        y: { beginAtZero: true, grid: { color: c.grade }, ticks: { color: c.texto, font: { size: 11 } } }
+                        x: { grid:{ color:c.grade }, ticks:{ color:c.texto, maxRotation:45, font:{size:11} } },
+                        y: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, font:{size:11} } }
                     }
                 }
             });
@@ -1090,9 +970,9 @@
         // ============================================================
         function renderizarChartTopFuncionarios() {
             const byUser = {};
-            atestadosFiltrados.forEach(a => { byUser[a.usuarioId] = (byUser[a.usuarioId] || 0) + 1; });
+            atestadosFiltrados.forEach(a => { byUser[a.usuarioId] = (byUser[a.usuarioId]||0)+1; });
 
-            const entries = Object.entries(byUser).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const entries = Object.entries(byUser).sort((a,b)=>b[1]-a[1]).slice(0,5);
             const c = cores();
 
             if (charts.topFuncionarios) charts.topFuncionarios.destroy();
@@ -1102,9 +982,9 @@
                     labels: entries.map(e => usuarios[e[0]] || `ID ${e[0]}`),
                     datasets: [{
                         label: 'Atestados',
-                        data: entries.map(e => e[1]),
-                        backgroundColor: PALETTE.slice(0, 5).map(p => p + 'cc'),
-                        borderColor: PALETTE.slice(0, 5),
+                        data: entries.map(e=>e[1]),
+                        backgroundColor: PALETTE.slice(0,5).map(p=>p+'cc'),
+                        borderColor:     PALETTE.slice(0,5),
                         borderWidth: 1,
                         borderRadius: 4
                     }]
@@ -1112,10 +992,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend:{ display:false } },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: c.texto, maxRotation: 30, font: { size: 11 } } },
-                        y: { beginAtZero: true, grid: { color: c.grade }, ticks: { color: c.texto, stepSize: 1, font: { size: 11 } } }
+                        x: { grid:{ display:false }, ticks:{ color:c.texto, maxRotation:30, font:{size:11} } },
+                        y: { beginAtZero:true, grid:{ color:c.grade }, ticks:{ color:c.texto, stepSize:1, font:{size:11} } }
                     }
                 }
             });
@@ -1132,9 +1012,9 @@
 
             try {
                 const { jsPDF } = window.jspdf;
-                const content = document.getElementById('mainContent');
+                const content      = document.getElementById('mainContent');
                 const exportSection = content.querySelector('.export-section');
-                const escuro = isDark();
+                const escuro       = isDark();
 
                 // Oculta a seção de exportação para não aparecer no PDF
                 if (exportSection) exportSection.style.display = 'none';
@@ -1150,22 +1030,22 @@
                 // Restaura a seção de exportação
                 if (exportSection) exportSection.style.display = '';
 
-                const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
-                const pW = pdf.internal.pageSize.getWidth();
-                const pH = pdf.internal.pageSize.getHeight();
-                const margin = 10;
-                const imgW = pW - margin * 2;
-                const imgH = (canvas.height * imgW) / canvas.width;
-                const dataStr = new Date().toLocaleDateString('pt-BR');
-                const horaStr = new Date().toLocaleTimeString('pt-BR');
-                const escala = canvas.width / imgW; // pixels por mm
+                const pdf       = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
+                const pW        = pdf.internal.pageSize.getWidth();
+                const pH        = pdf.internal.pageSize.getHeight();
+                const margin    = 10;
+                const imgW      = pW - margin * 2;
+                const imgH      = (canvas.height * imgW) / canvas.width;
+                const dataStr   = new Date().toLocaleDateString('pt-BR');
+                const horaStr   = new Date().toLocaleTimeString('pt-BR');
+                const escala    = canvas.width / imgW; // pixels por mm
 
                 // Calcula posições das linhas de conteúdo (.row) para evitar cortes
-                const contentRect = content.getBoundingClientRect();
-                const rowBreaks = [0];
+                const contentRect  = content.getBoundingClientRect();
+                const rowBreaks    = [0];
                 content.querySelectorAll('.row.g-3').forEach(row => {
-                    const rect = row.getBoundingClientRect();
-                    const topMM = (rect.top - contentRect.top) * (imgH / content.scrollHeight);
+                    const rect   = row.getBoundingClientRect();
+                    const topMM  = (rect.top - contentRect.top) * (imgH / content.scrollHeight);
                     if (topMM > 0) rowBreaks.push(topMM);
                 });
                 rowBreaks.push(imgH);
@@ -1186,19 +1066,19 @@
                 pdf.setTextColor(120);
                 pdf.text(`Gerado em: ${dataStr} às ${horaStr}  |  Total no período: ${atestadosFiltrados.length} atestado(s)`, margin, 20);
 
-                let yPos = 26;
+                let yPos     = 26;
                 let offsetMM = 0;
 
                 while (offsetMM < imgH) {
-                    const espacoMM = pH - yPos - margin;
-                    const maxOffsetMM = offsetMM + espacoMM;
-                    const fimSliceMM = quebraNatural(offsetMM, Math.min(maxOffsetMM, imgH));
+                    const espacoMM      = pH - yPos - margin;
+                    const maxOffsetMM   = offsetMM + espacoMM;
+                    const fimSliceMM    = quebraNatural(offsetMM, Math.min(maxOffsetMM, imgH));
                     const alturaSliceMM = fimSliceMM - offsetMM;
 
-                    const srcY = Math.round(offsetMM * escala);
-                    const srcH = Math.round(alturaSliceMM * escala);
+                    const srcY        = Math.round(offsetMM * escala);
+                    const srcH        = Math.round(alturaSliceMM * escala);
                     const sliceCanvas = document.createElement('canvas');
-                    sliceCanvas.width = canvas.width;
+                    sliceCanvas.width  = canvas.width;
                     sliceCanvas.height = srcH;
                     const ctx = sliceCanvas.getContext('2d');
                     ctx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
@@ -1236,69 +1116,69 @@
                 // Aba 1: Dados brutos
                 const brutos = atestadosFiltrados.map(a => ({
                     'ID': a.id,
-                    'Data Atestado': new Date(a.dataAtestado).toLocaleDateString('pt-BR'),
-                    'Funcionário': usuarios[a.usuarioId] || `ID ${a.usuarioId}`,
-                    'Médico': a.nomeMedico,
-                    'CRM': a.crm,
-                    'CID': a.cid || 'N/A',
+                    'Data Atestado':  new Date(a.dataAtestado).toLocaleDateString('pt-BR'),
+                    'Funcionário':    usuarios[a.usuarioId] || `ID ${a.usuarioId}`,
+                    'Médico':         a.nomeMedico,
+                    'CRM':            a.crm,
+                    'CID':            a.cid || 'N/A',
                     'Dias Afastamento': a.diasAfastamento || 'N/A',
-                    'Status': a.status,
+                    'Status':         a.status,
                     'Motivo Rejeição': a.motivoRejeicao || '',
-                    'Data Cadastro': new Date(a.dataCadastro).toLocaleDateString('pt-BR')
+                    'Data Cadastro':  new Date(a.dataCadastro).toLocaleDateString('pt-BR')
                 }));
                 XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(brutos), 'Dados');
 
                 // Aba 2: Por Mês
                 const byMes = {};
                 atestadosFiltrados.forEach(a => {
-                    const d = new Date(a.dataAtestado || a.dataCadastro);
-                    const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                    byMes[k] = (byMes[k] || 0) + 1;
+                    const d = new Date(a.dataAtestado||a.dataCadastro);
+                    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    byMes[k] = (byMes[k]||0)+1;
                 });
-                const dadosMes = Object.entries(byMes).sort().map(([k, v]) => {
-                    const [y, m] = k.split('-');
-                    return { 'Mês/Ano': `${MESES[+m - 1]}/${y}`, 'Quantidade': v };
+                const dadosMes = Object.entries(byMes).sort().map(([k,v]) => {
+                    const [y,m]=k.split('-');
+                    return { 'Mês/Ano': `${MESES[+m-1]}/${y}`, 'Quantidade': v };
                 });
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosMes.length ? dadosMes : [{ Aviso: 'Sem dados' }]), 'Por Mês');
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosMes.length ? dadosMes : [{Aviso:'Sem dados'}]), 'Por Mês');
 
                 // Aba 3: Por CID
                 const cidCount = {};
-                atestadosFiltrados.forEach(a => { if (a.cid) cidCount[a.cid] = (cidCount[a.cid] || 0) + 1; });
-                const dadosCID = Object.entries(cidCount).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ 'CID': k, 'Quantidade': v }));
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosCID.length ? dadosCID : [{ Aviso: 'Sem dados de CID' }]), 'Por CID');
+                atestadosFiltrados.forEach(a => { if (a.cid) cidCount[a.cid]=(cidCount[a.cid]||0)+1; });
+                const dadosCID = Object.entries(cidCount).sort((a,b)=>b[1]-a[1]).map(([k,v]) => ({ 'CID':k, 'Quantidade':v }));
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosCID.length ? dadosCID : [{Aviso:'Sem dados de CID'}]), 'Por CID');
 
                 // Aba 4: Por Dia da Semana
-                const diaCount = [0, 0, 0, 0, 0, 0, 0];
-                atestadosFiltrados.forEach(a => { diaCount[new Date(a.dataAtestado || a.dataCadastro).getDay()]++; });
-                const dadosDia = DIAS_SEMANA.map((d, i) => ({ 'Dia': d, 'Quantidade': diaCount[i] }));
+                const diaCount = [0,0,0,0,0,0,0];
+                atestadosFiltrados.forEach(a => { diaCount[new Date(a.dataAtestado||a.dataCadastro).getDay()]++; });
+                const dadosDia = DIAS_SEMANA.map((d,i) => ({ 'Dia':d, 'Quantidade':diaCount[i] }));
                 XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosDia), 'Por Dia');
 
                 // Aba 5: Média de Afastamento
-                const comDias = atestadosFiltrados.filter(a => a.diasAfastamento > 0);
+                const comDias = atestadosFiltrados.filter(a=>a.diasAfastamento>0);
                 const byMesDias = {};
                 comDias.forEach(a => {
-                    const d = new Date(a.dataAtestado || a.dataCadastro);
-                    const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                    if (!byMesDias[k]) byMesDias[k] = [];
+                    const d = new Date(a.dataAtestado||a.dataCadastro);
+                    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    if (!byMesDias[k]) byMesDias[k]=[];
                     byMesDias[k].push(a.diasAfastamento);
                 });
-                const dadosMedia = Object.entries(byMesDias).sort().map(([k, arr]) => {
-                    const [y, m] = k.split('-');
+                const dadosMedia = Object.entries(byMesDias).sort().map(([k,arr]) => {
+                    const [y,m]=k.split('-');
                     return {
-                        'Mês/Ano': `${MESES[+m - 1]}/${y}`,
-                        'Média Dias': parseFloat((arr.reduce((s, v) => s + v, 0) / arr.length).toFixed(1)),
+                        'Mês/Ano': `${MESES[+m-1]}/${y}`,
+                        'Média Dias': parseFloat((arr.reduce((s,v)=>s+v,0)/arr.length).toFixed(1)),
                         'Nº Atestados': arr.length
                     };
                 });
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosMedia.length ? dadosMedia : [{ Aviso: 'Sem dados de afastamento' }]), 'Média Afastamento');
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosMedia.length ? dadosMedia : [{Aviso:'Sem dados de afastamento'}]), 'Média Afastamento');
 
                 // Aba 6: Por Funcionário
                 const byUser = {};
-                atestadosFiltrados.forEach(a => { byUser[a.usuarioId] = (byUser[a.usuarioId] || 0) + 1; });
-                const dadosFunc = Object.entries(byUser).sort((a, b) => b[1] - a[1]).map(([id, qtd]) => ({
-                    'Funcionário': usuarios[id] || `ID ${id}`, 'Quantidade': qtd
+                atestadosFiltrados.forEach(a => { byUser[a.usuarioId]=(byUser[a.usuarioId]||0)+1; });
+                const dadosFunc = Object.entries(byUser).sort((a,b)=>b[1]-a[1]).map(([id,qtd]) => ({
+                    'Funcionário': usuarios[id]||`ID ${id}`, 'Quantidade': qtd
                 }));
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosFunc.length ? dadosFunc : [{ Aviso: 'Sem dados' }]), 'Por Funcionário');
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dadosFunc.length ? dadosFunc : [{Aviso:'Sem dados'}]), 'Por Funcionário');
 
                 XLSX.writeFile(wb, `relatorio-atestados-${new Date().toISOString().split('T')[0]}.xlsx`);
             } catch (e) {
@@ -1314,9 +1194,9 @@
         // DARK MODE (mesmo padrão de todas as páginas)
         // ============================================================
         (function () {
-            const btn = document.getElementById('contraste-toggle');
+            const btn  = document.getElementById('contraste-toggle');
             const body = document.body;
-            const KEY = 'altoContrasteAtivo';
+            const KEY  = 'altoContrasteAtivo';
 
             function aplicar() {
                 if (localStorage.getItem(KEY) === 'true') body.classList.add('alto-contraste');
@@ -1347,5 +1227,4 @@
     </script>
 
 </body>
-
 </html>

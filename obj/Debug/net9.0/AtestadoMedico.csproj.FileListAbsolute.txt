@@ -1,0 +1,8 @@
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\AtestadoMedico.csproj.AssemblyReference.cache
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\AtestadoMedico.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\AtestadoMedico.AssemblyInfoInputs.cache
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\AtestadoMedico.AssemblyInfo.cs
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\AtestadoMedico.csproj.CoreCompileInputs.cache
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\AtestadoMedico.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\guilh\OneDrive\Área de Trabalho\Projeto-Integrador-PI2-main\obj\Debug\net9.0\AtestadoMedico.MvcApplicationPartsAssemblyInfo.cache
