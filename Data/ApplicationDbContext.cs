@@ -24,36 +24,6 @@ namespace AtestadoMedico.Data
                 .HasForeignKey(a => a.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Seed de dados iniciais para teste
-            modelBuilder.Entity<Usuario>().HasData(
-                new Usuario
-                {
-                    Id = 1,
-                    Nome = "Administrador",
-                    Email = "admin@admin.com",
-                    Senha = "admin123",
-                    IsAdmin = true,
-                    DataCadastro = DateTime.SpecifyKind(new DateTime(2024, 3, 18, 10, 0, 0), DateTimeKind.Utc)
-                },
-                new Usuario
-                {
-                    Id = 2,
-                    Nome = "Usuário Teste",
-                    Email = "usuario@teste.com",
-                    Senha = "123456",
-                    IsAdmin = false,
-                    DataCadastro = DateTime.SpecifyKind(new DateTime(2024, 3, 18, 10, 0, 0), DateTimeKind.Utc)
-                },
-                new Usuario
-                {
-                    Id = 3,
-                    Nome = "Junior",
-                    Email = "junior@gmail.com",
-                    Senha = "junior@123",
-                    IsAdmin = true,
-                    DataCadastro = DateTime.SpecifyKind(new DateTime(2024, 3, 18, 10, 0, 0), DateTimeKind.Utc)
-                }
-            );
         }
     }
 } 

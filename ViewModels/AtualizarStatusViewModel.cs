@@ -5,7 +5,7 @@ namespace AtestadoMedico.ViewModels
     public class AtualizarStatusViewModel
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public string UsuarioId { get; set; } = string.Empty;
         
         [Required]
         public string Status { get; set; }

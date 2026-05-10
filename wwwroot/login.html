@@ -173,7 +173,7 @@
         /* ==== Botão de Alto Contraste ==== */
         .btn-contraste {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
             z-index: 9999;
             background-color: var(--primary-color);
@@ -193,12 +193,12 @@
             transform: translateY(-3px);
         }
 
-        /* ==== REGRA DE RESPONSIVIDADE PARA O BOTÃO ==== */
         @media (max-width: 700px) {
             .btn-contraste {
                 padding: 6px 14px;
                 font-size: 0.85rem;
-                top: 190px;
+                bottom: 15px;
+                right: 15px;
             }
         }
 
@@ -309,6 +309,31 @@
         </div>
     </div>
 
+    <!-- Modal de escolha de perfil para administradores -->
+    <div class="modal fade" id="modalPerfilAdmin" tabindex="-1" aria-labelledby="modalPerfilAdminLabel" aria-modal="true" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #2c7da0, #468faf); color: white;">
+                    <h5 class="modal-title" id="modalPerfilAdminLabel">
+                        <i class="fas fa-user-shield me-2"></i>Como deseja acessar o sistema?
+                    </h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <p class="mb-4 text-muted">Seu perfil possui acesso de <strong>Administrador</strong>. Escolha como deseja entrar:</p>
+                    <div class="d-grid gap-3">
+                        <button id="btnAcessarRH" class="btn btn-primary btn-lg">
+                            <i class="fas fa-users-cog me-2"></i>Área de RH / Administração
+                        </button>
+                        <button id="btnAcessarFuncionario" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-user me-2"></i>Área do Funcionário
+                            <small class="d-block text-muted mt-1" style="font-size:0.75rem;">Enviar e acompanhar meus atestados</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap 5 JS e Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -336,10 +361,8 @@
                 localStorage.setItem('usuarioNome', 'Administrador Teste');
                 localStorage.setItem('usuarioEmail', admin.email);
                 localStorage.setItem('usuarioIsAdmin', 'true');
-                showAlert('success', 'Login de administrador (teste) bem-sucedido! Redirecionando...');
-                setTimeout(() => {
-                    window.location.href = "admin.html";
-                }, 1500);
+                showAlert('success', 'Login realizado com sucesso!');
+                abrirModalPerfil();
                 return;
             }
 
@@ -375,10 +398,8 @@
                     localStorage.setItem('usuarioIsAdmin', userData.isAdmin);
 
                     if (userData.isAdmin) {
-                        showAlert('success', 'Login realizado com sucesso! Redirecionando para área de administração...');
-                        setTimeout(() => {
-                            window.location.href = "admin.html";
-                        }, 1500);
+                        showAlert('success', 'Login realizado com sucesso!');
+                        abrirModalPerfil();
                     } else {
                         showAlert('success', 'Login realizado com sucesso! Redirecionando...');
                         setTimeout(() => {
@@ -394,6 +415,21 @@
             }
         });
 
+
+        function abrirModalPerfil() {
+            const modal = new bootstrap.Modal(document.getElementById('modalPerfilAdmin'));
+            modal.show();
+
+            document.getElementById('btnAcessarRH').addEventListener('click', () => {
+                modal.hide();
+                window.location.href = "admin.html";
+            });
+
+            document.getElementById('btnAcessarFuncionario').addEventListener('click', () => {
+                modal.hide();
+                window.location.href = "funcionario.html";
+            });
+        }
 
         function showAlert(type, message) {
             const alertDiv = document.createElement('div');

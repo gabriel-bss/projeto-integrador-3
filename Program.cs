@@ -97,7 +97,7 @@ using (var scope = app.Services.CreateScope())
         {
             context.Usuarios.Add(new AtestadoMedico.Models.Usuario
             {
-                Nome = "Administrador",
+                Id = "Brasil001",
                 Email = "admin@admin.com",
                 Senha = "admin123",
                 IsAdmin = true,
@@ -106,13 +106,13 @@ using (var scope = app.Services.CreateScope())
             context.SaveChanges();
             Console.WriteLine("Usuário administrador criado: admin@admin.com / admin123");
         }
-        
+
         // Adicionar usuário normal para teste
         if (!context.Usuarios.Any(u => u.Email == "usuario@teste.com"))
         {
             context.Usuarios.Add(new AtestadoMedico.Models.Usuario
             {
-                Nome = "Usuário Teste",
+                Id = "Brasil002",
                 Email = "usuario@teste.com",
                 Senha = "123456",
                 IsAdmin = false,

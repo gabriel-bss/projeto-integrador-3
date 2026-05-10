@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -171,7 +171,7 @@
         /* ==== Botão de Alto Contraste ==== */
         .btn-contraste {
             position: fixed;
-            top: 65px;
+            bottom: 20px;
             right: 20px;
             z-index: 1056;
             background-color: white;
@@ -191,13 +191,12 @@
             transform: translateY(-3px);
         }
 
-        /* ==== REGRA DE RESPONSIVIDADE PARA O BOTÃO ==== */
         @media (max-width: 575.98px) {
             .btn-contraste {
                 padding: 6px 12px;
                 font-size: 0.8rem;
+                bottom: 15px;
                 right: 10px;
-                top: 190px;
             }
         }
 
@@ -426,6 +425,40 @@
                 <div class="tab-pane fade show active" id="atestados" role="tabpanel">
                     <h3 class="mb-4">Lista de Atestados</h3>
 
+                    <!-- Importação em Massa de Atestados via Excel -->
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-header fw-bold" style="background-color:#e8f4fb;">
+                            <i class="fas fa-file-excel me-2" style="color:#217346;"></i>Importação em Massa de Atestados via Planilha Excel
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-5">
+                                    <label class="form-label">1. Baixe a planilha modelo</label>
+                                    <div>
+                                        <a href="/api/atestado/ModeloPlanilha" class="btn btn-outline-success w-100" download>
+                                            <i class="fas fa-download me-2"></i>Baixar Planilha Modelo (.xlsx)
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <label class="form-label">2. Preencha e faça o upload</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="arquivoExcelAtestados" accept=".xlsx"
+                                            title="Somente arquivos .xlsx no formato da planilha modelo são aceitos">
+                                        <button class="btn btn-success" id="btnImportarExcelAtestados" type="button">
+                                            <i class="fas fa-upload me-1"></i>Importar
+                                        </button>
+                                    </div>
+                                    <div class="form-text text-warning">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Todos os campos são obrigatórios exceto <strong>Descricao</strong>. Status aceitos: <strong>Aprovado</strong> ou <strong>Rejeitado</strong>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="resultadoImportacaoAtestados" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+
                     <div class="mb-4">
                         <p class="mb-2"><strong>Legenda de Status:</strong></p>
                         <div class="d-flex gap-3">
@@ -462,12 +495,46 @@
                             <i class="fas fa-user-plus me-2"></i>Adicionar Usuário
                         </button>
                     </div>
+
+                    <!-- Importação em Massa de Usuários via Excel -->
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-header fw-bold" style="background-color:#e8f4fb;">
+                            <i class="fas fa-file-excel me-2" style="color:#217346;"></i>Importação em Massa via Planilha Excel
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-5">
+                                    <label class="form-label">1. Baixe a planilha modelo</label>
+                                    <div>
+                                        <a href="/api/usuario/ModeloPlanilha" class="btn btn-outline-success w-100" download>
+                                            <i class="fas fa-download me-2"></i>Baixar Planilha Modelo (.xlsx)
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <label class="form-label">2. Preencha e faça o upload</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="arquivoExcel" accept=".xlsx"
+                                            title="Somente arquivos .xlsx no formato da planilha modelo são aceitos">
+                                        <button class="btn btn-success" id="btnImportarExcel" type="button">
+                                            <i class="fas fa-upload me-1"></i>Importar
+                                        </button>
+                                    </div>
+                                    <div class="form-text text-warning">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Todos os campos são obrigatórios. IsAdmin aceita: <strong>true/false</strong>, <strong>sim/não</strong>, <strong>verdadeiro/falso</strong>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="resultadoImportacao" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nome</th>
                                     <th>Email</th>
                                     <th>Perfil</th>
                                     <th>Data de Cadastro</th>
@@ -512,10 +579,10 @@
                 <div class="modal-body">
                     <form id="addUserForm" class="needs-validation" novalidate>
                         <div class="mb-3">
-                            <label for="newUserName" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="newUserName" required>
+                            <label for="newUserMatricula" class="form-label">Matrícula (somente números)</label>
+                            <input type="text" class="form-control" id="newUserMatricula" pattern="[0-9]+" required>
                             <div class="invalid-feedback">
-                                Por favor, informe o nome do usuário.
+                                Por favor, informe a matrícula (somente números).
                             </div>
                         </div>
                         <div class="mb-3">
@@ -633,7 +700,7 @@
                 console.log('Usuário atual não é administrador. Trocando para o admin conhecido...');
 
                 // Armazenar os dados do usuário admin conhecido
-                localStorage.setItem('usuarioId', '1');
+                localStorage.setItem('usuarioId', 'Brasil001');
                 localStorage.setItem('usuarioNome', 'Administrador');
                 localStorage.setItem('usuarioEmail', 'admin@admin.com');
                 localStorage.setItem('usuarioIsAdmin', 'true');
@@ -1000,17 +1067,16 @@
 
                     row.innerHTML = `
                         <td>${usuario.id}</td>
-                        <td>${usuario.nome}</td>
                         <td>${usuario.email}</td>
                         <td><span class="badge ${usuario.isAdmin ? 'bg-primary' : 'bg-secondary'}">${perfil}</span></td>
                         <td>${dataCadastro}</td>
                         <td>
-                            <button class="btn btn-sm btn-warning change-password me-1" data-id="${usuario.id}" data-name="${usuario.nome}" title="Alterar Senha">
+                            <button class="btn btn-sm btn-warning change-password me-1" data-id="${usuario.id}" data-name="${usuario.id}" title="Alterar Senha">
                                 <i class="fas fa-key"></i>
                             </button>
                             ${(usuario.id != localStorage.getItem('usuarioId') &&
                             usuario.email !== 'admin@admin.com') ?
-                            `<button class="btn btn-sm btn-danger delete-user" data-id="${usuario.id}" data-name="${usuario.nome}" title="Excluir Usuário">
+                            `<button class="btn btn-sm btn-danger delete-user" data-id="${usuario.id}" data-name="${usuario.id}" title="Excluir Usuário">
                                   <i class="fas fa-trash"></i>
                               </button>` :
                             usuario.email === 'admin@admin.com' ?
@@ -1213,7 +1279,7 @@
                     return;
                 }
 
-                const nome = document.getElementById('newUserName').value;
+                const matricula = document.getElementById('newUserMatricula').value;
                 const email = document.getElementById('newUserEmail').value;
                 const senha = document.getElementById('newUserPassword').value;
                 const isAdmin = document.getElementById('newUserIsAdmin').checked;
@@ -1225,7 +1291,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        nome,
+                        matricula,
                         email,
                         senha,
                         isAdmin
@@ -1288,8 +1354,8 @@
                     return;
                 }
 
-                const usuarioId = parseInt(document.getElementById('userIdForPassword').value);
-                const adminId = parseInt(localStorage.getItem('usuarioId'));
+                const usuarioId = document.getElementById('userIdForPassword').value;
+                const adminId = localStorage.getItem('usuarioId');
 
                 const response = await fetch('/api/usuario/AlterarSenha', {
                     method: 'PUT',
@@ -1347,7 +1413,7 @@
             localStorage.clear();
 
             // Configurar dados de administrador
-            localStorage.setItem('usuarioId', '1');  // ID do usuário Administrador
+            localStorage.setItem('usuarioId', 'Brasil001');  // ID do usuário Administrador
             localStorage.setItem('usuarioNome', 'Administrador');
             localStorage.setItem('usuarioEmail', 'admin@admin.com');
             localStorage.setItem('usuarioIsAdmin', 'true');
@@ -1393,7 +1459,7 @@
 
                 // Dados para a requisição
                 const data = {
-                    usuarioId: parseInt(usuarioId),
+                    usuarioId: usuarioId,
                     status: status
                 };
 
@@ -1455,8 +1521,8 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        adminId: parseInt(adminId),
-                        usuarioId: parseInt(userId),
+                        adminId: adminId,
+                        usuarioId: userId,
                         forcarExclusao: forcarExclusao
                     })
                 });
@@ -1517,6 +1583,136 @@
         async function confirmarRejeicao(id, motivoRejeicao) {
             await mudarStatusAtestado(id, 'Rejeitado', null, motivoRejeicao);
         }
+
+        // === Importação de Usuários via Excel ===
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnImportarUsuarios = document.getElementById('btnImportarExcel');
+            if (btnImportarUsuarios) {
+                btnImportarUsuarios.addEventListener('click', async function () {
+                    const fileInput = document.getElementById('arquivoExcel');
+                    const resultDiv = document.getElementById('resultadoImportacao');
+
+                    if (!fileInput.files || fileInput.files.length === 0) {
+                        showAlert('warning', 'Selecione um arquivo .xlsx antes de importar.');
+                        return;
+                    }
+
+                    const arquivo = fileInput.files[0];
+                    if (!arquivo.name.endsWith('.xlsx')) {
+                        showAlert('danger', 'Apenas arquivos .xlsx são aceitos. Use a planilha modelo.');
+                        return;
+                    }
+
+                    const adminId = localStorage.getItem('usuarioId');
+                    const formData = new FormData();
+                    formData.append('arquivo', arquivo);
+
+                    btnImportarUsuarios.disabled = true;
+                    btnImportarUsuarios.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Importando...';
+
+                    try {
+                        const response = await fetch(`/api/usuario/ImportarPlanilha?adminId=${adminId}`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+                        resultDiv.style.display = 'block';
+
+                        if (response.ok) {
+                            let html = `<div class="alert alert-${data.erros.length > 0 ? 'warning' : 'success'}">
+                                <strong>${data.message}</strong>`;
+                            if (data.importados.length > 0) {
+                                html += `<hr><p class="mb-1"><strong>Importados (${data.importados.length}):</strong></p><ul class="mb-0">`;
+                                data.importados.forEach(u => { html += `<li>${u}</li>`; });
+                                html += '</ul>';
+                            }
+                            if (data.erros.length > 0) {
+                                html += `<hr><p class="mb-1 text-danger"><strong>Erros (${data.erros.length}):</strong></p><ul class="mb-0 text-danger">`;
+                                data.erros.forEach(e => { html += `<li>${e}</li>`; });
+                                html += '</ul>';
+                            }
+                            html += '</div>';
+                            resultDiv.innerHTML = html;
+                            if (data.importados.length > 0) carregarUsuarios();
+                        } else {
+                            resultDiv.innerHTML = `<div class="alert alert-danger"><strong>Erro:</strong> ${typeof data === 'string' ? data : JSON.stringify(data)}</div>`;
+                        }
+                    } catch (error) {
+                        resultDiv.innerHTML = `<div class="alert alert-danger">Erro ao importar: ${error.message}</div>`;
+                    } finally {
+                        btnImportarUsuarios.disabled = false;
+                        btnImportarUsuarios.innerHTML = '<i class="fas fa-upload me-1"></i>Importar';
+                        fileInput.value = '';
+                    }
+                });
+            }
+        });
+
+        // === Importação de Atestados via Excel ===
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnImportarAtestados = document.getElementById('btnImportarExcelAtestados');
+            if (btnImportarAtestados) {
+                btnImportarAtestados.addEventListener('click', async function () {
+                    const fileInput = document.getElementById('arquivoExcelAtestados');
+                    const resultDiv = document.getElementById('resultadoImportacaoAtestados');
+
+                    if (!fileInput.files || fileInput.files.length === 0) {
+                        showAlert('warning', 'Selecione um arquivo .xlsx antes de importar.');
+                        return;
+                    }
+
+                    const arquivo = fileInput.files[0];
+                    if (!arquivo.name.endsWith('.xlsx')) {
+                        showAlert('danger', 'Apenas arquivos .xlsx são aceitos. Use a planilha modelo.');
+                        return;
+                    }
+
+                    const adminId = localStorage.getItem('usuarioId');
+                    const formData = new FormData();
+                    formData.append('arquivo', arquivo);
+
+                    btnImportarAtestados.disabled = true;
+                    btnImportarAtestados.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Importando...';
+
+                    try {
+                        const response = await fetch(`/api/atestado/ImportarPlanilha?adminId=${adminId}`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+                        resultDiv.style.display = 'block';
+
+                        if (response.ok) {
+                            let html = `<div class="alert alert-${data.erros.length > 0 ? 'warning' : 'success'}">
+                                <strong>${data.message}</strong>`;
+                            if (data.importados.length > 0) {
+                                html += `<hr><p class="mb-1"><strong>Importados (${data.importados.length}):</strong></p><ul class="mb-0">`;
+                                data.importados.forEach(u => { html += `<li>${u}</li>`; });
+                                html += '</ul>';
+                            }
+                            if (data.erros.length > 0) {
+                                html += `<hr><p class="mb-1 text-danger"><strong>Erros (${data.erros.length}):</strong></p><ul class="mb-0 text-danger">`;
+                                data.erros.forEach(e => { html += `<li>${e}</li>`; });
+                                html += '</ul>';
+                            }
+                            html += '</div>';
+                            resultDiv.innerHTML = html;
+                            if (data.importados.length > 0) carregarAtestados();
+                        } else {
+                            resultDiv.innerHTML = `<div class="alert alert-danger"><strong>Erro:</strong> ${typeof data === 'string' ? data : JSON.stringify(data)}</div>`;
+                        }
+                    } catch (error) {
+                        resultDiv.innerHTML = `<div class="alert alert-danger">Erro ao importar: ${error.message}</div>`;
+                    } finally {
+                        btnImportarAtestados.disabled = false;
+                        btnImportarAtestados.innerHTML = '<i class="fas fa-upload me-1"></i>Importar';
+                        fileInput.value = '';
+                    }
+                });
+            }
+        });
 
         // === Alternância de Alto Contraste (com Memória) ===
         (function () {

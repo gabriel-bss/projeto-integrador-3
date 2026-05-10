@@ -195,7 +195,7 @@
         /* ==== Botão de Alto Contraste ==== */
         .btn-contraste {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
             z-index: 9999;
             background-color: var(--primary-color);
@@ -215,7 +215,6 @@
             transform: translateY(-3px);
         }
 
-        /* ==== REGRA DE RESPONSIVIDADE PARA O BOTÃO ==== */
         @media (max-width: 800px) {
             .navbar-brand {
                 font-size: 1.2rem;
@@ -223,9 +222,7 @@
             }
 
             .btn-contraste {
-                top: 73px;
-                background-color: white;
-                color: var(--primary-color);
+                bottom: 15px;
                 padding: 6px 12px;
                 font-size: 0.8rem;
                 right: 10px;

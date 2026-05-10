@@ -165,7 +165,7 @@
         /* ==== Botão de Alto Contraste ==== */
         .btn-contraste {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
             z-index: 9999;
             background-color: var(--primary-color);
@@ -185,13 +185,12 @@
             transform: translateY(-3px);
         }
 
-        /* ==== REGRA DE RESPONSIVIDADE DO BOTÃO ==== */
         @media (max-width: 575.98px) {
             .btn-contraste {
                 padding: 6px 12px;
                 font-size: 0.8rem;
+                bottom: 15px;
                 right: 10px;
-                top: 50px;
             }
         }
 
