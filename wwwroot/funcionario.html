@@ -554,9 +554,10 @@
             const tableBody = document.querySelector('#history table tbody');
             tableBody.innerHTML = '<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary" role="status"></div></td></tr>';
             try {
-                const response = await fetch(`/api/atestado?usuarioId=${usuarioId}`);
+                const response = await fetch(`/api/atestado/MeusAtestados?usuarioId=${usuarioId}`);
                 if (!response.ok) throw new Error('Falha ao carregar atestados');
-                const atestados = await response.json();
+                const data = await response.json();
+                const atestados = Array.isArray(data) ? data : (data.atestados || []);
                 tableBody.innerHTML = '';
                 if (atestados.length === 0) {
                     tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum atestado encontrado.</td></tr>';
